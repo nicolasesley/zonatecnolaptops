@@ -4,6 +4,9 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # La anon key de Supabase es pública a propósito (va al navegador).
+  # Si Netlify la marca como secreto, no hay que escanear config.js.
+  SECRETS_SCAN_OMIT_PATHS = "config.js"
 
 [[headers]]
   for = "/*"
