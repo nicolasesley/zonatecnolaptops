@@ -11,26 +11,27 @@
   --red:#d9363e;--yellow:#c58a00;--shadow:0 3px 14px rgba(20,35,60,.07)
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
 button,input,select{font:inherit}
 button{cursor:pointer}
-.container{max-width:1600px;margin:auto;padding:24px}
-.top{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px}
-h1{margin:0;font-size:27px}.subtitle{color:var(--muted);margin-top:5px}
-.badge{background:#e9f1ff;color:var(--primary);padding:8px 12px;border-radius:9px;font-weight:700;font-size:13px}
+.top-bar,.bottom-bar{flex:0 0 auto;z-index:30;background:var(--bg)}
+.top-bar{padding:12px 24px 10px}
+.bottom-bar{padding:10px 24px 12px;max-height:58vh;overflow:auto}
+.table-area{flex:1 1 auto;min-height:0;overflow:auto;padding:0 24px 8px}
+.table-area .panel{margin:0;height:100%;display:flex;flex-direction:column}
+.badge{background:#e9f1ff;color:var(--primary);padding:8px 12px;border-radius:9px;font-weight:700;font-size:13px;white-space:nowrap}
 .badge.warn{background:#fff1d9;color:#996400}
 .badge.ok{background:#e6f7ee;color:#15844a}
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);margin-bottom:18px}
-.filters{padding:14px;display:grid;grid-template-columns:2fr repeat(5,1fr) auto;gap:9px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
+.top-bar .panel,.bottom-bar .panel{margin:0}
+.filters{padding:14px;display:grid;grid-template-columns:2fr repeat(5,1fr) auto auto;gap:9px;align-items:center}
 input,select{height:41px;border:1px solid #cbd4df;border-radius:8px;background:#fff;padding:0 11px;color:var(--text);outline:none}
 input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 2px #1769e01c}
 .btn{border:1px solid #ccd5e0;background:#fff;border-radius:8px;padding:9px 14px;font-weight:600}
 .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn.primary:hover{background:var(--primary-dark)}
 .btn.danger{color:var(--red);background:#fff5f5;border-color:#f0caca}
-.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-.stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 14px;min-width:130px}
-.stat b{font-size:20px;display:block}.stat span{font-size:11px;color:var(--muted)}
-.table-wrap{overflow:auto;border-radius:14px}
+.table-wrap{overflow:auto;border-radius:14px;flex:1 1 auto;min-height:0}
 table{width:100%;border-collapse:collapse;min-width:1420px}
 thead th{position:sticky;top:0;background:#f7f9fc;color:#637083;font-size:11px;text-transform:uppercase;letter-spacing:.035em;text-align:left;padding:12px 10px;border-bottom:1px solid var(--border);white-space:nowrap;z-index:1}
 tbody td{padding:12px 10px;border-bottom:1px solid #e8edf3;font-size:13px;white-space:nowrap}
@@ -42,8 +43,8 @@ tbody tr:hover td{background:#fbfcfe}
 .g0{background:#f0f1f3;color:#626b77}.g1{background:#f0f1f3;color:#626b77}.g2{background:#e9f1ff;color:#1769e0}
 .g3{background:#e6f7ee;color:#15844a}.g4{background:#fff1d9;color:#996400}.g5{background:#eee6ff;color:#6e45a8}
 .actions{display:flex;gap:5px}.actions .btn{padding:7px 9px;font-size:11px}
-.form{padding:20px}
-.form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;padding:20px}
+.form{padding:0}
+.form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;padding:14px 20px}
 .form-head h2{font-size:18px;margin:0}.editing{font-size:12px;color:var(--primary);font-weight:650}
 .form-head-right{display:flex;align-items:center;gap:10px}.toggle-btn{white-space:nowrap}
 .form-content{padding:0 20px 20px}.form-content.collapsed{display:none}
@@ -56,31 +57,21 @@ tbody tr:hover td{background:#fbfcfe}
 .import-label{display:inline-flex;align-items:center}
 .empty{text-align:center;color:var(--muted);padding:45px}
 .help{margin-top:10px;color:var(--muted);font-size:11px}
-.setup{padding:16px 20px;display:none}
+.setup{padding:16px 20px;display:none;margin-bottom:10px}
 .setup.show{display:block}
 .setup h2{margin:0 0 8px;font-size:16px}
 .setup code{background:#f4f6f9;padding:2px 6px;border-radius:4px;font-size:12px}
-.toast{position:fixed;right:20px;bottom:20px;background:#182235;color:#fff;padding:12px 16px;border-radius:9px;box-shadow:var(--shadow);display:none;font-size:13px}
+.toast{position:fixed;right:20px;top:20px;background:#182235;color:#fff;padding:12px 16px;border-radius:9px;box-shadow:var(--shadow);display:none;font-size:13px;z-index:40}
 @media(max-width:1100px){.filters{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:650px){.container{padding:12px}.top{display:block}.badge{display:inline-block;margin-top:10px}.filters,.grid{grid-template-columns:1fr}.span2{grid-column:auto}}
+@media(max-width:650px){.top-bar,.bottom-bar,.table-area{padding-left:12px;padding-right:12px}.filters,.grid{grid-template-columns:1fr}.span2{grid-column:auto}.badge{justify-self:start}}
 </style>
 </head>
 <body>
-<div class="container">
-
-  <div class="top">
-    <div>
-      <h1>Catálogo de Laptops</h1>
-      <div class="subtitle">Compará equipos por hardware, rendimiento, precio y uso recomendado.</div>
-    </div>
-    <div id="statusBadge" class="badge warn">Zonatecno · Sin conexión</div>
-  </div>
-
+<header class="top-bar">
   <section class="panel setup" id="setupPanel">
     <h2>Falta configurar Supabase</h2>
     <p>En local copiá <code>config.example.js</code> a <code>config.js</code> y pegá la URL y la anon key. En Netlify definí las variables <code>SUPABASE_URL</code> y <code>SUPABASE_ANON_KEY</code>. El SQL está en <code>supabase/schema.sql</code>.</p>
   </section>
-
   <section class="panel">
     <div class="filters">
       <input id="search" placeholder="🔎 Buscar código, marca, modelo, CPU o GPU...">
@@ -90,11 +81,12 @@ tbody tr:hover td{background:#fbfcfe}
       <select id="filterRam"><option value="">Toda la RAM</option><option value="4">4 GB</option><option value="8">8 GB</option><option value="16">16 GB</option><option value="32">32 GB</option><option value="64">64 GB o más</option></select>
       <select id="filterGama"><option value="">Todas las gamas</option><option>Muy baja</option><option>Baja</option><option>Media</option><option>Media alta</option><option>Alta</option><option>Muy alta</option></select>
       <button class="btn primary" onclick="clearFilters()">Limpiar</button>
+      <div id="statusBadge" class="badge warn">Zonatecno · Sin conexión</div>
     </div>
   </section>
+</header>
 
-  <section class="stats" id="stats"></section>
-
+<main class="table-area">
   <section class="panel">
     <div class="table-wrap">
       <table>
@@ -110,7 +102,9 @@ tbody tr:hover td{background:#fbfcfe}
       </table>
     </div>
   </section>
+</main>
 
+<footer class="bottom-bar">
   <section class="panel form" id="formPanel">
     <div class="form-head">
       <h2 id="formTitle">＋ Agregar laptop al catálogo</h2>
@@ -206,7 +200,7 @@ tbody tr:hover td{background:#fbfcfe}
     </form>
     </div>
   </section>
-</div>
+</footer>
 
 <div id="toast" class="toast"></div>
 
@@ -303,13 +297,6 @@ function refresh() {
     </tr>`;
   }).join("") : '<tr><td colspan="15" class="empty">No se encontraron laptops con esos filtros.</td></tr>';
 
-  $("stats").innerHTML = [
-    ["Equipos", data.length],
-    ["Visibles", rows.length],
-    ["Marcas", new Set(data.map(x => x.brand).filter(Boolean)).size],
-    ["Promedio", data.length ? (data.reduce((s, x) => s + avg(x), 0) / data.length).toFixed(1) : "—"]
-  ].map(([label, value]) => `<div class="stat"><b>${esc(value)}</b><span>${label}</span></div>`).join("");
-
   updateFilterOptions();
 }
 
@@ -388,7 +375,6 @@ function editLaptop(id) {
   $("saveBtn").textContent = "Guardar cambios";
   if ($("formContent").classList.contains("collapsed")) toggleForm();
   $("editing").textContent = `Editando ${x.code} · ${x.brand} ${x.model}`;
-  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
 }
 
 function resetForm() {
