@@ -217,13 +217,14 @@ const avg = x => (Number(x.gaming) + Number(x.design) + Number(x.office)) / 3;
 function getGama(n) {
   if (n < 2) return "Muy baja";
   if (n < 4) return "Baja";
+  if (n < 5) return "Baja-media";
   if (n < 6) return "Media";
   if (n < 7.5) return "Media alta";
   if (n < 9) return "Alta";
   return "Muy alta";
 }
 function gamaClass(g) {
-  return { "Muy baja": "g0", "Baja": "g1", "Media": "g2", "Media alta": "g3", "Alta": "g4", "Muy alta": "g5" }[g];
+  return { "Muy baja": "g0", "Baja": "g1", "Baja-media": "g2", "Media": "g3", "Media alta": "g4", "Alta": "g5", "Muy alta": "g6" }[g];
 }
 
 function toRow(x) {
