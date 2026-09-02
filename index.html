@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo de Laptops — Zonatecno</title>
+<style>
+:root{
+  --primary:#1769e0;--primary-dark:#0f57c7;--bg:#f4f6f9;--surface:#fff;
+  --text:#182235;--muted:#718096;--border:#dfe5ed;--green:#159447;
+  --red:#d9363e;--yellow:#c58a00;--shadow:0 3px 14px rgba(20,35,60,.07)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.container{max-width:1600px;margin:auto;padding:24px}
+.top{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px}
+h1{margin:0;font-size:27px}.subtitle{color:var(--muted);margin-top:5px}
+.badge{background:#e9f1ff;color:var(--primary);padding:8px 12px;border-radius:9px;font-weight:700;font-size:13px}
+.badge.warn{background:#fff1d9;color:#996400}
+.badge.ok{background:#e6f7ee;color:#15844a}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);margin-bottom:18px}
+.filters{padding:14px;display:grid;grid-template-columns:2fr repeat(5,1fr) auto;gap:9px}
+input,select{height:41px;border:1px solid #cbd4df;border-radius:8px;background:#fff;padding:0 11px;color:var(--text);outline:none}
+input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 2px #1769e01c}
+.btn{border:1px solid #ccd5e0;background:#fff;border-radius:8px;padding:9px 14px;font-weight:600}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn.primary:hover{background:var(--primary-dark)}
+.btn.danger{color:var(--red);background:#fff5f5;border-color:#f0caca}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 14px;min-width:130px}
+.stat b{font-size:20px;display:block}.stat span{font-size:11px;color:var(--muted)}
+.table-wrap{overflow:auto;border-radius:14px}
+table{width:100%;border-collapse:collapse;min-width:1420px}
+thead th{position:sticky;top:0;background:#f7f9fc;color:#637083;font-size:11px;text-transform:uppercase;letter-spacing:.035em;text-align:left;padding:12px 10px;border-bottom:1px solid var(--border);white-space:nowrap;z-index:1}
+tbody td{padding:12px 10px;border-bottom:1px solid #e8edf3;font-size:13px;white-space:nowrap}
+tbody tr:hover td{background:#fbfcfe}
+.code{font-size:11px;color:var(--muted)}.model{font-weight:750}.price{font-weight:800}
+.score{font-weight:800}.avg{font-size:17px}
+.ram{font-weight:750}.ram-icon{font-size:17px;margin-left:5px}.yes{color:var(--green)}.no{color:var(--red)}.unknown{color:var(--yellow)}
+.gama{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:750}
+.g0{background:#f0f1f3;color:#626b77}.g1{background:#f0f1f3;color:#626b77}.g2{background:#e9f1ff;color:#1769e0}
+.g3{background:#e6f7ee;color:#15844a}.g4{background:#fff1d9;color:#996400}.g5{background:#eee6ff;color:#6e45a8}
+.actions{display:flex;gap:5px}.actions .btn{padding:7px 9px;font-size:11px}
+.form{padding:20px}
+.form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;padding:20px}
+.form-head h2{font-size:18px;margin:0}.editing{font-size:12px;color:var(--primary);font-weight:650}
+.form-head-right{display:flex;align-items:center;gap:10px}.toggle-btn{white-space:nowrap}
+.form-content{padding:0 20px 20px}.form-content.collapsed{display:none}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.field label{display:block;font-size:11px;color:var(--muted);font-weight:650;margin-bottom:5px}
+.span2{grid-column:span 2}.span4{grid-column:1/-1}
+.expand{height:41px;border:1px solid #cbd4df;border-radius:8px;display:flex;align-items:center;gap:16px;padding:0 10px}
+.expand label{margin:0;color:var(--text);font-weight:500;display:flex;align-items:center;gap:4px}
+.actions-form{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.import-label{display:inline-flex;align-items:center}
+.empty{text-align:center;color:var(--muted);padding:45px}
+.help{margin-top:10px;color:var(--muted);font-size:11px}
+.setup{padding:16px 20px;display:none}
+.setup.show{display:block}
+.setup h2{margin:0 0 8px;font-size:16px}
+.setup code{background:#f4f6f9;padding:2px 6px;border-radius:4px;font-size:12px}
+.toast{position:fixed;right:20px;bottom:20px;background:#182235;color:#fff;padding:12px 16px;border-radius:9px;box-shadow:var(--shadow);display:none;font-size:13px}
+@media(max-width:1100px){.filters{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.container{padding:12px}.top{display:block}.badge{display:inline-block;margin-top:10px}.filters,.grid{grid-template-columns:1fr}.span2{grid-column:auto}}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="top">
+    <div>
+      <h1>Catálogo de Laptops</h1>
+      <div class="subtitle">Compará equipos por hardware, rendimiento, precio y uso recomendado.</div>
+    </div>
+    <div id="statusBadge" class="badge warn">Zonatecno · Sin conexión</div>
+  </div>
+
+  <section class="panel setup" id="setupPanel">
+    <h2>Falta configurar Supabase</h2>
+    <p>En local copiá <code>config.example.js</code> a <code>config.js</code> y pegá la URL y la anon key. En Netlify definí las variables <code>SUPABASE_URL</code> y <code>SUPABASE_ANON_KEY</code>. El SQL está en <code>supabase/schema.sql</code>.</p>
+  </section>
+
+  <section class="panel">
+    <div class="filters">
+      <input id="search" placeholder="🔎 Buscar código, marca, modelo, CPU o GPU...">
+      <select id="filterBrand"><option value="">Todas las marcas</option></select>
+      <select id="filterGpu"><option value="">Todas las GPU</option></select>
+      <select id="filterFamily"><option value="">Todas las familias</option></select>
+      <select id="filterRam"><option value="">Toda la RAM</option><option value="4">4 GB</option><option value="8">8 GB</option><option value="16">16 GB</option><option value="32">32 GB</option><option value="64">64 GB o más</option></select>
+      <select id="filterGama"><option value="">Todas las gamas</option><option>Muy baja</option><option>Baja</option><option>Media</option><option>Media alta</option><option>Alta</option><option>Muy alta</option></select>
+      <button class="btn primary" onclick="clearFilters()">Limpiar</button>
+    </div>
+  </section>
+
+  <section class="stats" id="stats"></section>
+
+  <section class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th><th>Marca / Modelo</th><th>Procesador</th><th>Familia CPU</th>
+            <th>GPU</th><th>RAM</th><th>Almacenamiento</th><th>FurMark 2</th>
+            <th>Gaming</th><th>Diseño / Edición</th><th>Office / Estudio</th>
+            <th>Promedio</th><th>Gama</th><th>Precio</th><th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel form" id="formPanel">
+    <div class="form-head">
+      <h2 id="formTitle">＋ Agregar laptop al catálogo</h2>
+      <div class="form-head-right">
+        <div id="editing" class="editing"></div>
+        <button class="btn toggle-btn" id="toggleFormBtn" type="button" onclick="toggleForm()">＋ Mostrar</button>
+      </div>
+    </div>
+
+    <div id="formContent" class="form-content collapsed">
+    <form id="form">
+      <input type="hidden" id="editId">
+
+      <div class="grid">
+        <div class="field">
+          <label>Código corto *</label>
+          <input id="code" required placeholder="Ej. 109208">
+        </div>
+        <div class="field">
+          <label>Marca *</label>
+          <input id="brand" required placeholder="Lenovo">
+        </div>
+        <div class="field span2">
+          <label>Modelo *</label>
+          <input id="model" required placeholder="IdeaPad Slim 3 15AMN8">
+        </div>
+
+        <div class="field">
+          <label>Procesador *</label>
+          <input id="cpu" required placeholder="Ryzen 3 7320">
+        </div>
+        <div class="field">
+          <label>Familia del procesador *</label>
+          <input id="family" required placeholder="AMD">
+        </div>
+        <div class="field">
+          <label>GPU *</label>
+          <input id="gpu" required placeholder="Radeon 610M / RTX 4050">
+        </div>
+        <div class="field">
+          <label>RAM (GB) *</label>
+          <input id="ram" required type="number" min="1" placeholder="8">
+        </div>
+
+        <div class="field">
+          <label>RAM expandible *</label>
+          <div class="expand">
+            <label><input type="radio" name="expand" value="yes"> ✓ Sí</label>
+            <label><input type="radio" name="expand" value="no"> ✕ No</label>
+            <label><input type="radio" name="expand" value="unknown" checked> ? No sé</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Almacenamiento (GB) *</label>
+          <input id="storage" required type="number" min="1" placeholder="512">
+        </div>
+        <div class="field">
+          <label>FurMark 2</label>
+          <input id="furmark" type="number" min="0" step="0.1" placeholder="Ej. 1250">
+        </div>
+        <div class="field">
+          <label>Precio USD</label>
+          <input id="price" type="number" min="0" step="1" placeholder="659">
+        </div>
+
+        <div class="field">
+          <label>Gaming /10 *</label>
+          <input id="gaming" required type="number" min="0" max="10" step="0.1" placeholder="7">
+        </div>
+        <div class="field">
+          <label>Diseño / AutoCAD / Edición /10 *</label>
+          <input id="design" required type="number" min="0" max="10" step="0.1" placeholder="6">
+        </div>
+        <div class="field">
+          <label>Office / Estudio /10 *</label>
+          <input id="office" required type="number" min="0" max="10" step="0.1" placeholder="8">
+        </div>
+        <div class="field">
+          <label>Link Zonatecno</label>
+          <input id="link" type="url" placeholder="https://...">
+        </div>
+      </div>
+
+      <div class="actions-form">
+        <button id="saveBtn" class="btn primary" type="submit">＋ Agregar laptop</button>
+        <button class="btn" type="button" onclick="resetForm()">Cancelar edición / Limpiar</button>
+        <button class="btn" type="button" onclick="exportCSV()">⬇ Exportar CSV</button>
+        <label class="btn import-label">⬆ Importar CSV
+          <input id="importFile" type="file" accept=".csv" hidden>
+        </label>
+      </div>
+      <div class="help">Los datos se guardan en Supabase y se sincronizan entre navegadores. El indicador ✓ / ✕ / ? de RAM lo elegís manualmente.</div>
+    </form>
+    </div>
+  </section>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+let db = null;
+let data = [];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const avg = x => (Number(x.gaming) + Number(x.design) + Number(x.office)) / 3;
+
+function getGama(n) {
+  if (n < 2) return "Muy baja";
+  if (n < 4) return "Baja";
+  if (n < 6) return "Media";
+  if (n < 7.5) return "Media alta";
+  if (n < 9) return "Alta";
+  return "Muy alta";
+}
+function gamaClass(g) {
+  return { "Muy baja": "g0", "Baja": "g1", "Media": "g2", "Media alta": "g3", "Alta": "g4", "Muy alta": "g5" }[g];
+}
+
+function toRow(x) {
+  return {
+    id: x.id,
+    code: x.code,
+    brand: x.brand,
+    model: x.model,
+    cpu: x.cpu,
+    family: x.family,
+    gpu: x.gpu,
+    ram: Number(x.ram),
+    expand: x.expand || "unknown",
+    storage: Number(x.storage),
+    furmark: Number(x.furmark) || 0,
+    price: Number(x.price) || 0,
+    gaming: Number(x.gaming),
+    design: Number(x.design),
+    office: Number(x.office),
+    link: x.link || ""
+  };
+}
+
+function expandIcon(v) {
+  if (v === "yes") return '<span class="ram-icon yes" title="RAM expandible">✓</span>';
+  if (v === "no") return '<span class="ram-icon no" title="RAM no expandible">✕</span>';
+  return '<span class="ram-icon unknown" title="Expandibilidad desconocida">?</span>';
+}
+
+function setStatus(ok, text) {
+  const badge = $("statusBadge");
+  badge.textContent = text;
+  badge.className = "badge " + (ok ? "ok" : "warn");
+}
+
+function configured() {
+  const url = window.SUPABASE_URL || "";
+  const key = window.SUPABASE_ANON_KEY || "";
+  return url.startsWith("https://") && key.length > 20 && !url.includes("TU-PROYECTO");
+}
+
+function refresh() {
+  const q = $("search").value.toLowerCase().trim();
+  const brand = $("filterBrand").value, fam = $("filterFamily").value, gpu = $("filterGpu").value;
+  const ram = $("filterRam").value, gama = $("filterGama").value;
+
+  const rows = data.filter(x => {
+    const text = [x.code, x.brand, x.model, x.cpu, x.family, x.gpu].join(" ").toLowerCase();
+    const gpuOk = !gpu || normalizeGPU(x.gpu) === gpu;
+    const ramOk = !ram || (ram === "64" ? x.ram >= 64 : Number(x.ram) === Number(ram));
+    return (!q || text.includes(q)) && (!brand || x.brand === brand) && (!fam || x.family === fam) && gpuOk && ramOk && (!gama || getGama(avg(x)) === gama);
+  }).sort((a, b) => avg(b) - avg(a));
+
+  $("rows").innerHTML = rows.length ? rows.map(x => {
+    const a = avg(x), g = getGama(a);
+    return `<tr data-id="${esc(x.id)}">
+      <td><div class="code">${esc(x.code)}</div></td>
+      <td><div class="model">${esc(x.brand)}</div>${esc(x.model)}</td>
+      <td>${esc(x.cpu)}</td><td>${esc(x.family)}</td><td>${esc(x.gpu)}</td>
+      <td class="ram">${esc(x.ram)} GB ${expandIcon(x.expand)}</td>
+      <td>${esc(x.storage)} GB</td><td>${x.furmark ? esc(x.furmark) : "—"}</td>
+      <td>${esc(x.gaming)}/10</td><td>${esc(x.design)}/10</td><td>${esc(x.office)}/10</td>
+      <td class="avg">${a.toFixed(1)}</td>
+      <td><span class="gama ${gamaClass(g)}">${g}</span></td>
+      <td class="price">${x.price ? "USD " + esc(x.price) : "—"}</td>
+      <td><div class="actions">
+        <button class="btn" data-action="edit">✏ Editar</button>
+        ${x.link ? '<button class="btn" data-action="open">Ver</button>' : ""}
+        <button class="btn danger" data-action="remove">Eliminar</button>
+      </div></td>
+    </tr>`;
+  }).join("") : '<tr><td colspan="15" class="empty">No se encontraron laptops con esos filtros.</td></tr>';
+
+  $("stats").innerHTML = [
+    ["Equipos", data.length],
+    ["Visibles", rows.length],
+    ["Marcas", new Set(data.map(x => x.brand).filter(Boolean)).size],
+    ["Promedio", data.length ? (data.reduce((s, x) => s + avg(x), 0) / data.length).toFixed(1) : "—"]
+  ].map(([label, value]) => `<div class="stat"><b>${esc(value)}</b><span>${label}</span></div>`).join("");
+
+  updateFilterOptions();
+}
+
+function normalizeGPU(value) {
+  return String(value || "")
+    .toUpperCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Z0-9]+/g, "");
+}
+
+function gpuLabel(value) {
+  return String(value || "").trim().replace(/\s+/g, " ");
+}
+
+function updateFilterOptions() {
+  const b = $("filterBrand").value, f = $("filterFamily").value, g = $("filterGpu").value;
+  const brands = [...new Set(data.map(x => x.brand).filter(Boolean))].sort((a, c) => a.localeCompare(c));
+  const families = [...new Set(data.map(x => x.family).filter(Boolean))].sort((a, c) => a.localeCompare(c));
+  const gpuMap = new Map();
+  data.map(x => gpuLabel(x.gpu)).filter(Boolean).forEach(original => {
+    const key = normalizeGPU(original);
+    if (!gpuMap.has(key)) gpuMap.set(key, original);
+  });
+
+  $("filterBrand").innerHTML = '<option value="">Todas las marcas</option>' +
+    brands.map(x => `<option value="${esc(x)}" ${x === b ? "selected" : ""}>${esc(x)}</option>`).join("");
+  $("filterFamily").innerHTML = '<option value="">Todas las familias</option>' +
+    families.map(x => `<option value="${esc(x)}" ${x === f ? "selected" : ""}>${esc(x)}</option>`).join("");
+  $("filterGpu").innerHTML = '<option value="">Todas las GPU</option>' +
+    [...gpuMap.entries()].sort((a, c) => a[1].localeCompare(c[1])).map(([key, label]) =>
+      `<option value="${esc(key)}" ${key === g ? "selected" : ""}>${esc(label)}</option>`
+    ).join("");
+}
+
+["search", "filterBrand", "filterGpu", "filterFamily", "filterRam", "filterGama"].forEach(id => $(id).addEventListener("input", refresh));
+
+function clearFilters() {
+  $("search").value = "";
+  ["filterBrand", "filterGpu", "filterFamily", "filterRam", "filterGama"].forEach(id => $(id).value = "");
+  refresh();
+}
+
+function toggleForm() {
+  const content = $("formContent");
+  const button = $("toggleFormBtn");
+  const collapsed = content.classList.toggle("collapsed");
+  button.textContent = collapsed ? "＋ Mostrar" : "− Ocultar";
+}
+
+$("rows").addEventListener("click", e => {
+  const btn = e.target.closest("[data-action]");
+  if (!btn) return;
+  const id = btn.closest("tr")?.dataset.id;
+  const x = data.find(v => v.id === id);
+  if (!x) return;
+  if (btn.dataset.action === "edit") editLaptop(id);
+  if (btn.dataset.action === "remove") removeLaptop(id);
+  if (btn.dataset.action === "open") openLink(x.link);
+});
+
+function openLink(url) {
+  try {
+    const u = new URL(url);
+    if (u.protocol === "http:" || u.protocol === "https:") window.open(u.href, "_blank", "noopener");
+  } catch (_) {}
+}
+
+function editLaptop(id) {
+  const x = data.find(v => v.id === id); if (!x) return;
+  $("editId").value = x.id; $("code").value = x.code; $("brand").value = x.brand; $("model").value = x.model;
+  $("cpu").value = x.cpu; $("family").value = x.family; $("gpu").value = x.gpu; $("ram").value = x.ram;
+  $("storage").value = x.storage; $("furmark").value = x.furmark || ""; $("price").value = x.price || "";
+  $("gaming").value = x.gaming; $("design").value = x.design; $("office").value = x.office; $("link").value = x.link || "";
+  document.querySelector(`input[name="expand"][value="${x.expand || "unknown"}"]`).checked = true;
+  $("formTitle").textContent = "✏ Editar laptop";
+  $("saveBtn").textContent = "Guardar cambios";
+  if ($("formContent").classList.contains("collapsed")) toggleForm();
+  $("editing").textContent = `Editando ${x.code} · ${x.brand} ${x.model}`;
+  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+}
+
+function resetForm() {
+  $("form").reset(); $("editId").value = "";
+  $("formTitle").textContent = "＋ Agregar laptop al catálogo";
+  $("saveBtn").textContent = "＋ Agregar laptop"; $("editing").textContent = "";
+  document.querySelector('input[name="expand"][value="unknown"]').checked = true;
+}
+
+function readForm() {
+  const id = $("editId").value;
+  return {
+    id: id || crypto.randomUUID(),
+    code: $("code").value.trim(),
+    brand: $("brand").value.trim(),
+    model: $("model").value.trim(),
+    cpu: $("cpu").value.trim(),
+    family: $("family").value.trim(),
+    gpu: $("gpu").value.trim(),
+    ram: Number($("ram").value),
+    expand: document.querySelector('input[name="expand"]:checked').value,
+    storage: Number($("storage").value),
+    furmark: Number($("furmark").value) || 0,
+    price: Number($("price").value) || 0,
+    gaming: Number($("gaming").value),
+    design: Number($("design").value),
+    office: Number($("office").value),
+    link: $("link").value.trim()
+  };
+}
+
+async function loadLaptops() {
+  if (!db) return;
+  const { data: rows, error } = await db.from("laptops").select("*").order("created_at", { ascending: false });
+  if (error) throw error;
+  data = (rows || []).map(toRow);
+  refresh();
+}
+
+async function removeLaptop(id) {
+  const x = data.find(v => v.id === id);
+  if (!confirm(`¿Querés eliminar ${x.brand} ${x.model}?`)) return;
+  if (!db) return toast("Supabase no está configurado");
+  const { error } = await db.from("laptops").delete().eq("id", id);
+  if (error) return toast("No se pudo eliminar: " + error.message);
+  data = data.filter(v => v.id !== id);
+  refresh();
+  toast("Laptop eliminada");
+}
+
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!db) return toast("Supabase no está configurado");
+  const id = $("editId").value;
+  const x = readForm();
+  if (id) {
+    const { error } = await db.from("laptops").update(toRow(x)).eq("id", id);
+    if (error) return toast("No se pudo guardar: " + error.message);
+    data = data.map(v => v.id === id ? x : v);
+  } else {
+    const { error } = await db.from("laptops").insert(toRow(x));
+    if (error) return toast("No se pudo agregar: " + error.message);
+    data.push(x);
+  }
+  refresh();
+  resetForm();
+  toast(id ? "Cambios guardados" : "Laptop agregada al catálogo");
+});
+
+function csvEscape(v) { return '"' + String(v ?? "").replace(/"/g, '""') + '"'; }
+function exportCSV() {
+  const headers = ["codigo", "marca", "modelo", "procesador", "familia_cpu", "gpu", "ram_gb", "ram_expandible", "almacenamiento_gb", "furmark2", "gaming", "diseno", "office_estudio", "promedio", "gama", "precio_usd", "link"];
+  const lines = [headers.join(","), ...data.map(x => [
+    x.code, x.brand, x.model, x.cpu, x.family, x.gpu, x.ram, x.expand, x.storage, x.furmark, x.gaming, x.design, x.office, avg(x).toFixed(2), getGama(avg(x)), x.price, x.link
+  ].map(csvEscape).join(","))];
+  const blob = new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "catalogo_laptops.csv"; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 500); toast("Catálogo exportado");
+}
+
+function parseCSVLine(line) {
+  const out = []; let cur = "", quote = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') {
+      if (quote && line[i + 1] === '"') { cur += '"'; i++; } else quote = !quote;
+    } else if (c === "," && !quote) { out.push(cur); cur = ""; } else cur += c;
+  }
+  out.push(cur); return out;
+}
+
+$("importFile").addEventListener("change", async e => {
+  const file = e.target.files[0]; if (!file) return;
+  if (!db) { toast("Supabase no está configurado"); e.target.value = ""; return; }
+  const lines = (await file.text()).replace(/^\ufeff/, "").trim().split(/\r?\n/);
+  if (lines.length < 2) { toast("CSV vacío"); return; }
+  const h = parseCSVLine(lines[0]); const ix = n => h.indexOf(n);
+  const rows = [];
+  for (const line of lines.slice(1)) {
+    const v = parseCSVLine(line); if (!v.length) continue;
+    const x = toRow({
+      id: crypto.randomUUID(),
+      code: v[ix("codigo")] || "",
+      brand: v[ix("marca")] || "",
+      model: v[ix("modelo")] || "",
+      cpu: v[ix("procesador")] || "",
+      family: v[ix("familia_cpu")] || "",
+      gpu: v[ix("gpu")] || "",
+      ram: Number(v[ix("ram_gb")]) || 0,
+      expand: ["yes", "no", "unknown"].includes(v[ix("ram_expandible")]) ? v[ix("ram_expandible")] : "unknown",
+      storage: Number(v[ix("almacenamiento_gb")]) || 0,
+      furmark: Number(v[ix("furmark2")]) || 0,
+      gaming: Number(v[ix("gaming")]) || 0,
+      design: Number(v[ix("diseno")]) || 0,
+      office: Number(v[ix("office_estudio")]) || 0,
+      price: Number(v[ix("precio_usd")]) || 0,
+      link: v[ix("link")] || ""
+    });
+    if (x.code) rows.push(x);
+  }
+  if (!rows.length) { toast("No hay filas válidas"); e.target.value = ""; return; }
+  const { error } = await db.from("laptops").insert(rows);
+  if (error) { toast("Importación fallida: " + error.message); e.target.value = ""; return; }
+  await loadLaptops();
+  e.target.value = "";
+  toast(`${rows.length} laptops importadas`);
+});
+
+function toast(msg) {
+  $("toast").textContent = msg; $("toast").style.display = "block";
+  clearTimeout(window.toastTimer); window.toastTimer = setTimeout(() => $("toast").style.display = "none", 2200);
+}
+
+async function init() {
+  refresh();
+  if (!configured()) {
+    $("setupPanel").classList.add("show");
+    setStatus(false, "Zonatecno · Configurá Supabase");
+    return;
+  }
+  db = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+  try {
+    await loadLaptops();
+    setStatus(true, "Zonatecno · Conectado a Supabase");
+    db.channel("laptops-live")
+      .on("postgres_changes", { event: "*", schema: "public", table: "laptops" }, () => {
+        loadLaptops().catch(() => {});
+      })
+      .subscribe();
+  } catch (err) {
+    setStatus(false, "Zonatecno · Error de Supabase");
+    toast("No se pudo leer el catálogo: " + (err.message || err));
+  }
+}
+
+init();
+</script>
+</body>
+</html>
