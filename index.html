@@ -25,7 +25,7 @@ button{cursor:pointer}
 .badge.ok{background:#e6f7ee;color:#15844a}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
 .top-bar .panel,.bottom-bar .panel{margin:0}
-.filters{padding:14px;display:grid;grid-template-columns:2fr repeat(5,1fr) auto auto;gap:9px;align-items:center}
+.filters{padding:14px;display:grid;grid-template-columns:2fr repeat(6,1fr) auto auto;gap:9px;align-items:center}
 input,select{height:41px;border:1px solid #cbd4df;border-radius:8px;background:#fff;padding:0 11px;color:var(--text);outline:none}
 input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 2px #1769e01c}
 .btn{border:1px solid #ccd5e0;background:#fff;border-radius:8px;padding:9px 14px;font-weight:600}
@@ -84,6 +84,7 @@ tbody tr:hover td{background:#fbfcfe}
       <select id="filterGpu"><option value="">Todas las GPU</option></select>
       <select id="filterFamily"><option value="">Todas las familias</option></select>
       <select id="filterRam"><option value="">Toda la RAM</option><option value="4">4 GB</option><option value="8">8 GB</option><option value="12">12 GB</option><option value="16">16 GB</option><option value="24">24 GB</option><option value="32">32 GB</option><option value="64">64 GB o más</option></select>
+      <select id="filterStorage"><option value="">Todo el almacenamiento</option><option value="128">128 GB</option><option value="256">256 GB</option><option value="512">512 GB</option><option value="1024">1024 GB</option><option value="2048">2048 GB</option></select>
       <select id="filterGama"><option value="">Todas las gamas</option><option>Muy baja</option><option>Baja</option><option>Baja-Media</option><option>Media</option><option>Media alta</option><option>Alta</option><option>Muy alta</option></select>
       <button class="btn primary" onclick="clearFilters()">Limpiar</button>
       <div id="statusBadge" class="badge warn">Zonatecno · Sin conexión</div>
@@ -274,13 +275,14 @@ function configured() {
 function refresh() {
   const q = $("search").value.toLowerCase().trim();
   const brand = $("filterBrand").value, fam = $("filterFamily").value, gpu = $("filterGpu").value;
-  const ram = $("filterRam").value, gama = $("filterGama").value;
+  const ram = $("filterRam").value, storage = $("filterStorage").value, gama = $("filterGama").value;
 
   const rows = data.filter(x => {
     const text = [x.code, x.brand, x.model, x.cpu, x.family, x.gpu].join(" ").toLowerCase();
     const gpuOk = !gpu || normalizeGPU(x.gpu) === gpu;
     const ramOk = !ram || (ram === "64" ? x.ram >= 64 : Number(x.ram) === Number(ram));
-    return (!q || text.includes(q)) && (!brand || x.brand === brand) && (!fam || x.family === fam) && gpuOk && ramOk && (!gama || getGama(avg(x)) === gama);
+    const storageOk = !storage || Number(x.storage) === Number(storage);
+    return (!q || text.includes(q)) && (!brand || x.brand === brand) && (!fam || x.family === fam) && gpuOk && ramOk && storageOk && (!gama || getGama(avg(x)) === gama);
   }).sort((a, b) => avg(b) - avg(a));
 
   $("rows").innerHTML = rows.length ? rows.map(x => {
@@ -337,11 +339,11 @@ function updateFilterOptions() {
     ).join("");
 }
 
-["search", "filterBrand", "filterGpu", "filterFamily", "filterRam", "filterGama"].forEach(id => $(id).addEventListener("input", refresh));
+["search", "filterBrand", "filterGpu", "filterFamily", "filterRam", "filterStorage", "filterGama"].forEach(id => $(id).addEventListener("input", refresh));
 
 function clearFilters() {
   $("search").value = "";
-  ["filterBrand", "filterGpu", "filterFamily", "filterRam", "filterGama"].forEach(id => $(id).value = "");
+  ["filterBrand", "filterGpu", "filterFamily", "filterRam", "filterStorage", "filterGama"].forEach(id => $(id).value = "");
   refresh();
 }
 
