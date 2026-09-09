@@ -48,4 +48,5 @@ En cada build, Netlify escribe `config.js` con esas variables. El archivo no se 
 
 - La tabla `laptops` tiene RLS abierta para `anon` (catálogo interno). Si más adelante hay usuarios públicos, hay que restringir escritura.
 - El CSV de importar/exportar sigue el mismo formato de antes.
+- 
 - Si dos personas editan a la vez, Realtime recarga la tabla.
