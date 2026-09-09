@@ -4,6 +4,7 @@ Sitio estático del catálogo interno. Los datos viven en **Supabase**; el sitio
 
 ## 1. Supabase
 
+
 1. Creá un proyecto en [supabase.com](https://supabase.com).
 2. En **SQL Editor**, pegá y ejecutá `supabase/schema.sql`.
 3. En **Project Settings → API** copiá:
