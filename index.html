@@ -25,39 +25,34 @@ button{cursor:pointer}
 .badge.ok{background:#e6f7ee;color:#15844a}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
 .top-bar .panel,.bottom-bar .panel{margin:0}
-.filters{padding:14px;display:grid;grid-template-columns:2fr repeat(6,1fr) auto auto;gap:9px;align-items:center}
+.filters{padding:14px;display:grid;grid-template-columns:2fr repeat(5,1fr) auto auto;gap:9px;align-items:center}
 input,select{height:41px;border:1px solid #cbd4df;border-radius:8px;background:#fff;padding:0 11px;color:var(--text);outline:none}
 input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 2px #1769e01c}
 .btn{border:1px solid #ccd5e0;background:#fff;border-radius:8px;padding:9px 14px;font-weight:600}
 .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn.primary:hover{background:var(--primary-dark)}
 .btn.danger{color:var(--red);background:#fff5f5;border-color:#f0caca}
 .table-wrap{overflow:auto;border-radius:14px;flex:1 1 auto;min-height:0}
-table{width:100%;border-collapse:collapse;min-width:1420px}
+table{width:100%;border-collapse:collapse;min-width:1100px}
 thead th{position:sticky;top:0;background:#f7f9fc;color:#637083;font-size:11px;text-transform:uppercase;letter-spacing:.035em;text-align:left;padding:12px 10px;border-bottom:1px solid var(--border);white-space:nowrap;z-index:1}
+th.sortable{cursor:pointer;user-select:none}
+th.sortable:hover{color:var(--text)}
+.sort-ind{margin-left:4px;color:var(--primary)}
 tbody td{padding:12px 10px;border-bottom:1px solid #e8edf3;font-size:13px;white-space:nowrap}
 tbody tr:hover td{background:#fbfcfe}
 .code{font-size:11px;color:var(--muted)}.model{font-weight:750}.price{font-weight:800}
-.score{font-weight:800}.avg{font-size:17px}
 .ram{font-weight:750}.ram-icon{font-size:17px;margin-left:5px}.yes{color:var(--green)}.no{color:var(--red)}.unknown{color:var(--yellow)}
-.gama{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:750}
-.g0{background:#f0f1f3;color:#626b77}   /* Muy baja */
-.g1{background:#f0f1f3;color:#626b77}   /* Baja */
-.g2{background:#f8f0e6;color:#9a6a2f}   /* Baja-media */
-.g3{background:#e9f1ff;color:#1769e0}   /* Media */
-.g4{background:#e6f7ee;color:#15844a}   /* Media alta */
-.g5{background:#fff1d9;color:#996400}   /* Alta */
-.g6{background:#eee6ff;color:#6e45a8}   /* Muy alta */
 .actions{display:flex;gap:5px}.actions .btn{padding:7px 9px;font-size:11px}
 .form{padding:0}
 .form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;padding:14px 20px}
 .form-head h2{font-size:18px;margin:0}.editing{font-size:12px;color:var(--primary);font-weight:650}
 .form-head-right{display:flex;align-items:center;gap:10px}.toggle-btn{white-space:nowrap}
 .form-content{padding:0 20px 20px}.form-content.collapsed{display:none}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
-.field label{display:block;font-size:11px;color:var(--muted);font-weight:650;margin-bottom:5px}
-.span2{grid-column:span 2}.span4{grid-column:1/-1}
-.expand{height:41px;border:1px solid #cbd4df;border-radius:8px;display:flex;align-items:center;gap:16px;padding:0 10px}
-.expand label{margin:0;color:var(--text);font-weight:500;display:flex;align-items:center;gap:4px}
+.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 12px;align-items:start}
+.field{display:flex;flex-direction:column;min-width:0}
+.field label{display:flex;align-items:flex-end;min-height:32px;font-size:11px;color:var(--muted);font-weight:650;margin-bottom:5px;line-height:1.2}
+.field > input,.field > select,.field > .expand{width:100%;height:41px;flex:0 0 41px}
+.expand{border:1px solid #cbd4df;border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 10px}
+.expand label{margin:0;min-height:0;color:var(--text);font-weight:500;font-size:12px;display:flex;align-items:center;gap:4px;white-space:nowrap}
 .actions-form{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 .import-label{display:inline-flex;align-items:center}
 .empty{text-align:center;color:var(--muted);padding:45px}
@@ -67,15 +62,15 @@ tbody tr:hover td{background:#fbfcfe}
 .setup h2{margin:0 0 8px;font-size:16px}
 .setup code{background:#f4f6f9;padding:2px 6px;border-radius:4px;font-size:12px}
 .toast{position:fixed;right:20px;top:20px;background:#182235;color:#fff;padding:12px 16px;border-radius:9px;box-shadow:var(--shadow);display:none;font-size:13px;z-index:40}
-@media(max-width:1100px){.filters{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:650px){.top-bar,.bottom-bar,.table-area{padding-left:12px;padding-right:12px}.filters,.grid{grid-template-columns:1fr}.span2{grid-column:auto}.badge{justify-self:start}}
+@media(max-width:1100px){.filters{grid-template-columns:repeat(3,1fr)}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.field.skip{display:none}}
+@media(max-width:650px){.top-bar,.bottom-bar,.table-area{padding-left:12px;padding-right:12px}.filters,.form-grid{grid-template-columns:1fr}.badge{justify-self:start}}
 </style>
 </head>
 <body>
 <header class="top-bar">
   <section class="panel setup" id="setupPanel">
     <h2>Falta configurar Supabase</h2>
-    <p>En local copiá <code>config.example.js</code> a <code>config.js</code> y pegá la URL y la anon key. En Netlify definí las variables <code>SUPABASE_URL</code> y <code>SUPABASE_ANON_KEY</code>. El SQL está en <code>supabase/schema.sql</code>.</p>
+    <p>En local copiá <code>config.example.js</code> a <code>config.js</code> y pegá la URL y la anon key. En Cloudflare el Worker tiene que servir ese <code>config.js</code>. El SQL está en <code>supabase/schema.sql</code>.</p>
   </section>
   <section class="panel">
     <div class="filters">
@@ -85,7 +80,6 @@ tbody tr:hover td{background:#fbfcfe}
       <select id="filterFamily"><option value="">Todas las familias</option></select>
       <select id="filterRam"><option value="">Toda la RAM</option><option value="4">4 GB</option><option value="8">8 GB</option><option value="12">12 GB</option><option value="16">16 GB</option><option value="24">24 GB</option><option value="32">32 GB</option><option value="64">64 GB o más</option></select>
       <select id="filterStorage"><option value="">Todo el almacenamiento</option><option value="128">128 GB</option><option value="256">256 GB</option><option value="512">512 GB</option><option value="1024">1024 GB</option><option value="2048">2048 GB</option></select>
-      <select id="filterGama"><option value="">Todas las gamas</option><option>Muy baja</option><option>Baja</option><option>Baja-Media</option><option>Media</option><option>Media alta</option><option>Alta</option><option>Muy alta</option></select>
       <button class="btn primary" onclick="clearFilters()">Limpiar</button>
       <div id="statusBadge" class="badge warn">Zonatecno · Sin conexión</div>
     </div>
@@ -99,9 +93,10 @@ tbody tr:hover td{background:#fbfcfe}
         <thead>
           <tr>
             <th>Código</th><th>Marca / Modelo</th><th>Procesador</th><th>Familia CPU</th>
-            <th>GPU</th><th>RAM</th><th>Almacenamiento</th><th>FurMark 2</th>
-            <th>Gaming</th><th>Diseño / Edición</th><th>Office / Estudio</th>
-            <th>Promedio</th><th>Gama</th><th>Precio</th><th>Acciones</th>
+            <th>GPU</th><th>RAM</th><th>Almacenamiento</th>
+            <th class="sortable" onclick="toggleSort('furmark')">FurMark 2<span class="sort-ind" id="furmarkSortInd"></span></th>
+            <th class="sortable" onclick="toggleSort('price')">Precio<span class="sort-ind" id="priceSortInd"></span></th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody id="rows"></tbody>
@@ -124,7 +119,7 @@ tbody tr:hover td{background:#fbfcfe}
     <form id="form">
       <input type="hidden" id="editId">
 
-      <div class="grid">
+      <div class="form-grid">
         <div class="field">
           <label>Código corto *</label>
           <input id="code" required placeholder="Ej. 109208">
@@ -133,40 +128,72 @@ tbody tr:hover td{background:#fbfcfe}
           <label>Marca *</label>
           <input id="brand" required placeholder="Lenovo">
         </div>
-        <div class="field span2">
+        <div class="field">
           <label>Modelo *</label>
           <input id="model" required placeholder="IdeaPad Slim 3 15AMN8">
         </div>
+        <div class="field">
+          <label>Link web</label>
+          <input id="link" type="url" placeholder="https://...">
+        </div>
 
         <div class="field">
-          <label>Procesador *</label>
-          <input id="cpu" required placeholder="Ryzen 3 7320">
-        </div>
-        <div class="field">
-          <label>Familia del procesador *</label>
+          <label>Familia de CPU *</label>
           <input id="family" required placeholder="AMD">
         </div>
         <div class="field">
-          <label>GPU *</label>
+          <label>CPU *</label>
+          <input id="cpu" required placeholder="Ryzen 3 7320">
+        </div>
+        <div class="field">
+          <label>Gráficos *</label>
           <input id="gpu" required placeholder="Radeon 610M / RTX 4050">
         </div>
+        <div class="field skip"></div>
+
         <div class="field">
           <label>RAM (GB) *</label>
           <input id="ram" required type="number" min="1" placeholder="8">
         </div>
-
         <div class="field">
-          <label>RAM expandible *</label>
+          <label>Tipo de RAM</label>
+          <select id="ramType">
+            <option value="">No sé</option>
+            <option value="ddr4">DDR4</option>
+            <option value="ddr5">DDR5</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Frecuencia (MHz)</label>
+          <input id="ramMhz" type="number" min="0" step="1" placeholder="Ej. 4800">
+        </div>
+        <div class="field">
+          <label>RAM expandible</label>
           <div class="expand">
             <label><input type="radio" name="expand" value="yes"> ✓ Sí</label>
             <label><input type="radio" name="expand" value="no"> ✕ No</label>
             <label><input type="radio" name="expand" value="unknown" checked> ? No sé</label>
           </div>
         </div>
+
         <div class="field">
           <label>Almacenamiento (GB) *</label>
           <input id="storage" required type="number" min="1" placeholder="512">
         </div>
+        <div class="field">
+          <label>Tipo de almacenamiento</label>
+          <input id="storageType" placeholder="Ej. M.2, NVMe, SATA">
+        </div>
+        <div class="field skip"></div>
+        <div class="field">
+          <label>Almacenamiento expandible</label>
+          <div class="expand">
+            <label><input type="radio" name="storageExpand" value="yes"> ✓ Sí</label>
+            <label><input type="radio" name="storageExpand" value="no"> ✕ No</label>
+            <label><input type="radio" name="storageExpand" value="unknown" checked> ? No sé</label>
+          </div>
+        </div>
+
         <div class="field">
           <label>FurMark 2</label>
           <input id="furmark" type="number" min="0" step="0.1" placeholder="Ej. 1250">
@@ -175,23 +202,8 @@ tbody tr:hover td{background:#fbfcfe}
           <label>Precio USD</label>
           <input id="price" type="number" min="0" step="1" placeholder="659">
         </div>
-
-        <div class="field">
-          <label>Gaming /10 *</label>
-          <input id="gaming" required type="number" min="0" max="10" step="0.1" placeholder="7">
-        </div>
-        <div class="field">
-          <label>Diseño / AutoCAD / Edición /10 *</label>
-          <input id="design" required type="number" min="0" max="10" step="0.1" placeholder="6">
-        </div>
-        <div class="field">
-          <label>Office / Estudio /10 *</label>
-          <input id="office" required type="number" min="0" max="10" step="0.1" placeholder="8">
-        </div>
-        <div class="field">
-          <label>Link Zonatecno</label>
-          <input id="link" type="url" placeholder="https://...">
-        </div>
+        <div class="field skip"></div>
+        <div class="field skip"></div>
       </div>
 
       <div class="actions-form">
@@ -202,7 +214,7 @@ tbody tr:hover td{background:#fbfcfe}
           <input id="importFile" type="file" accept=".csv" hidden>
         </label>
       </div>
-      <div class="help">Los datos se guardan en Supabase y se sincronizan entre navegadores. El indicador ✓ / ✕ / ? de RAM lo elegís manualmente.</div>
+      <div class="help">Los datos se guardan en Supabase y se sincronizan entre navegadores. RAM y almacenamiento expandible: ✓ / ✕ / ?.</div>
     </form>
     </div>
   </section>
@@ -215,23 +227,11 @@ tbody tr:hover td{background:#fbfcfe}
 <script>
 let db = null;
 let data = [];
+let sortCol = null;
+let sortDir = null;
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const avg = x => (Number(x.gaming) + Number(x.design) + Number(x.office)) / 3;
-
-function getGama(n) {
-  if (n < 2) return "Muy baja";
-  if (n < 4) return "Baja";
-  if (n < 5) return "Baja-media";
-  if (n < 6) return "Media";
-  if (n < 7.5) return "Media alta";
-  if (n < 9) return "Alta";
-  return "Muy alta";
-}
-function gamaClass(g) {
-  return { "Muy baja": "g0", "Baja": "g1", "Baja-media": "g2", "Media": "g3", "Media alta": "g4", "Alta": "g5", "Muy alta": "g6" }[g];
-}
 
 function toRow(x) {
   return {
@@ -244,7 +244,11 @@ function toRow(x) {
     gpu: x.gpu,
     ram: Number(x.ram),
     expand: x.expand || "unknown",
+    ram_type: x.ram_type === "ddr4" || x.ram_type === "ddr5" ? x.ram_type : "",
+    ram_mhz: Number(x.ram_mhz) || 0,
     storage: Number(x.storage),
+    storage_expand: x.storage_expand || "unknown",
+    storage_type: x.storage_type || "",
     furmark: Number(x.furmark) || 0,
     price: Number(x.price) || 0,
     gaming: Number(x.gaming),
@@ -254,10 +258,26 @@ function toRow(x) {
   };
 }
 
-function expandIcon(v) {
-  if (v === "yes") return '<span class="ram-icon yes" title="RAM expandible">✓</span>';
-  if (v === "no") return '<span class="ram-icon no" title="RAM no expandible">✕</span>';
-  return '<span class="ram-icon unknown" title="Expandibilidad desconocida">?</span>';
+function expandIcon(v, what) {
+  if (v === "yes") return `<span class="ram-icon yes" title="${what} expandible">✓</span>`;
+  if (v === "no") return `<span class="ram-icon no" title="${what} no expandible">✕</span>`;
+  return `<span class="ram-icon unknown" title="Expandibilidad de ${what} desconocida">?</span>`;
+}
+
+function ramCell(x) {
+  const type = x.ram_type === "ddr4" ? " DDR4" : x.ram_type === "ddr5" ? " DDR5" : "";
+  const mhz = x.ram_mhz ? " " + esc(x.ram_mhz) + " MHz" : "";
+  return `${esc(x.ram)} GB${type}${mhz} ${expandIcon(x.expand, "RAM")}`;
+}
+
+function storageCell(x) {
+  const kind = x.storage_type ? " " + esc(x.storage_type) : "";
+  return `${esc(x.storage)} GB${kind} ${expandIcon(x.storage_expand, "almacenamiento")}`;
+}
+
+function setRadio(name, value) {
+  const el = document.querySelector(`input[name="${name}"][value="${value || "unknown"}"]`);
+  if (el) el.checked = true;
 }
 
 function setStatus(ok, text) {
@@ -272,30 +292,42 @@ function configured() {
   return url.startsWith("https://") && key.length > 20 && !url.includes("TU-PROYECTO");
 }
 
+function toggleSort(col) {
+  if (sortCol === col) sortDir = sortDir === "desc" ? "asc" : "desc";
+  else { sortCol = col; sortDir = "desc"; }
+  const mark = sortDir === "desc" ? " ▼" : " ▲";
+  $("furmarkSortInd").textContent = sortCol === "furmark" ? mark : "";
+  $("priceSortInd").textContent = sortCol === "price" ? mark : "";
+  refresh();
+}
+
 function refresh() {
   const q = $("search").value.toLowerCase().trim();
   const brand = $("filterBrand").value, fam = $("filterFamily").value, gpu = $("filterGpu").value;
-  const ram = $("filterRam").value, storage = $("filterStorage").value, gama = $("filterGama").value;
+  const ram = $("filterRam").value, storage = $("filterStorage").value;
 
-  const rows = data.filter(x => {
-    const text = [x.code, x.brand, x.model, x.cpu, x.family, x.gpu].join(" ").toLowerCase();
+  let rows = data.filter(x => {
+    const text = [x.code, x.brand, x.model, x.cpu, x.family, x.gpu, x.ram_type, x.storage_type].join(" ").toLowerCase();
     const gpuOk = !gpu || normalizeGPU(x.gpu) === gpu;
     const ramOk = !ram || (ram === "64" ? x.ram >= 64 : Number(x.ram) === Number(ram));
     const storageOk = !storage || Number(x.storage) === Number(storage);
-    return (!q || text.includes(q)) && (!brand || x.brand === brand) && (!fam || x.family === fam) && gpuOk && ramOk && storageOk && (!gama || getGama(avg(x)) === gama);
-  }).sort((a, b) => avg(b) - avg(a));
+    return (!q || text.includes(q)) && (!brand || x.brand === brand) && (!fam || x.family === fam) && gpuOk && ramOk && storageOk;
+  });
+  if (sortCol) {
+    rows = rows.slice().sort((a, b) => {
+      const av = Number(a[sortCol]) || 0;
+      const bv = Number(b[sortCol]) || 0;
+      return sortDir === "desc" ? bv - av : av - bv;
+    });
+  }
 
   $("rows").innerHTML = rows.length ? rows.map(x => {
-    const a = avg(x), g = getGama(a);
     return `<tr data-id="${esc(x.id)}">
       <td><div class="code">${esc(x.code)}</div></td>
       <td><div class="model">${esc(x.brand)}</div>${esc(x.model)}</td>
       <td>${esc(x.cpu)}</td><td>${esc(x.family)}</td><td>${esc(x.gpu)}</td>
-      <td class="ram">${esc(x.ram)} GB ${expandIcon(x.expand)}</td>
-      <td>${esc(x.storage)} GB</td><td>${x.furmark ? esc(x.furmark) : "—"}</td>
-      <td>${esc(x.gaming)}/10</td><td>${esc(x.design)}/10</td><td>${esc(x.office)}/10</td>
-      <td class="avg">${a.toFixed(1)}</td>
-      <td><span class="gama ${gamaClass(g)}">${g}</span></td>
+      <td class="ram">${ramCell(x)}</td>
+      <td>${storageCell(x)}</td><td>${x.furmark ? esc(x.furmark) : "—"}</td>
       <td class="price">${x.price ? "USD " + esc(x.price) : "—"}</td>
       <td><div class="actions">
         <button class="btn" data-action="edit">✏ Editar</button>
@@ -303,7 +335,7 @@ function refresh() {
         <button class="btn danger" data-action="remove">Eliminar</button>
       </div></td>
     </tr>`;
-  }).join("") : '<tr><td colspan="15" class="empty">No se encontraron laptops con esos filtros.</td></tr>';
+  }).join("") : '<tr><td colspan="10" class="empty">No se encontraron laptops con esos filtros.</td></tr>';
 
   updateFilterOptions();
 }
@@ -339,11 +371,11 @@ function updateFilterOptions() {
     ).join("");
 }
 
-["search", "filterBrand", "filterGpu", "filterFamily", "filterRam", "filterStorage", "filterGama"].forEach(id => $(id).addEventListener("input", refresh));
+["search", "filterBrand", "filterGpu", "filterFamily", "filterRam", "filterStorage"].forEach(id => $(id).addEventListener("input", refresh));
 
 function clearFilters() {
   $("search").value = "";
-  ["filterBrand", "filterGpu", "filterFamily", "filterRam", "filterStorage", "filterGama"].forEach(id => $(id).value = "");
+  ["filterBrand", "filterGpu", "filterFamily", "filterRam", "filterStorage"].forEach(id => $(id).value = "");
   refresh();
 }
 
@@ -375,10 +407,13 @@ function openLink(url) {
 function editLaptop(id) {
   const x = data.find(v => v.id === id); if (!x) return;
   $("editId").value = x.id; $("code").value = x.code; $("brand").value = x.brand; $("model").value = x.model;
-  $("cpu").value = x.cpu; $("family").value = x.family; $("gpu").value = x.gpu; $("ram").value = x.ram;
-  $("storage").value = x.storage; $("furmark").value = x.furmark || ""; $("price").value = x.price || "";
-  $("gaming").value = x.gaming; $("design").value = x.design; $("office").value = x.office; $("link").value = x.link || "";
-  document.querySelector(`input[name="expand"][value="${x.expand || "unknown"}"]`).checked = true;
+  $("link").value = x.link || "";
+  $("family").value = x.family; $("cpu").value = x.cpu; $("gpu").value = x.gpu;
+  $("ram").value = x.ram; $("ramType").value = x.ram_type || ""; $("ramMhz").value = x.ram_mhz || "";
+  setRadio("expand", x.expand);
+  $("storage").value = x.storage; $("storageType").value = x.storage_type || "";
+  setRadio("storageExpand", x.storage_expand);
+  $("furmark").value = x.furmark || ""; $("price").value = x.price || "";
   $("formTitle").textContent = "✏ Editar laptop";
   $("saveBtn").textContent = "Guardar cambios";
   if ($("formContent").classList.contains("collapsed")) toggleForm();
@@ -389,11 +424,13 @@ function resetForm() {
   $("form").reset(); $("editId").value = "";
   $("formTitle").textContent = "＋ Agregar laptop al catálogo";
   $("saveBtn").textContent = "＋ Agregar laptop"; $("editing").textContent = "";
-  document.querySelector('input[name="expand"][value="unknown"]').checked = true;
+  setRadio("expand", "unknown");
+  setRadio("storageExpand", "unknown");
 }
 
 function readForm() {
   const id = $("editId").value;
+  const existing = id ? data.find(v => v.id === id) : null;
   return {
     id: id || crypto.randomUUID(),
     code: $("code").value.trim(),
@@ -404,12 +441,16 @@ function readForm() {
     gpu: $("gpu").value.trim(),
     ram: Number($("ram").value),
     expand: document.querySelector('input[name="expand"]:checked').value,
+    ram_type: $("ramType").value,
+    ram_mhz: Number($("ramMhz").value) || 0,
     storage: Number($("storage").value),
+    storage_expand: document.querySelector('input[name="storageExpand"]:checked').value,
+    storage_type: $("storageType").value.trim(),
     furmark: Number($("furmark").value) || 0,
     price: Number($("price").value) || 0,
-    gaming: Number($("gaming").value),
-    design: Number($("design").value),
-    office: Number($("office").value),
+    gaming: existing ? Number(existing.gaming) : 0,
+    design: existing ? Number(existing.design) : 0,
+    office: existing ? Number(existing.office) : 0,
     link: $("link").value.trim()
   };
 }
@@ -454,9 +495,9 @@ $("form").addEventListener("submit", async e => {
 
 function csvEscape(v) { return '"' + String(v ?? "").replace(/"/g, '""') + '"'; }
 function exportCSV() {
-  const headers = ["codigo", "marca", "modelo", "procesador", "familia_cpu", "gpu", "ram_gb", "ram_expandible", "almacenamiento_gb", "furmark2", "gaming", "diseno", "office_estudio", "promedio", "gama", "precio_usd", "link"];
+  const headers = ["codigo", "marca", "modelo", "link", "familia_cpu", "procesador", "gpu", "ram_gb", "ram_tipo", "ram_mhz", "ram_expandible", "almacenamiento_gb", "almacenamiento_expandible", "almacenamiento_tipo", "furmark2", "precio_usd"];
   const lines = [headers.join(","), ...data.map(x => [
-    x.code, x.brand, x.model, x.cpu, x.family, x.gpu, x.ram, x.expand, x.storage, x.furmark, x.gaming, x.design, x.office, avg(x).toFixed(2), getGama(avg(x)), x.price, x.link
+    x.code, x.brand, x.model, x.link, x.family, x.cpu, x.gpu, x.ram, x.ram_type, x.ram_mhz, x.expand, x.storage, x.storage_expand, x.storage_type, x.furmark, x.price
   ].map(csvEscape).join(","))];
   const blob = new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "catalogo_laptops.csv"; a.click();
@@ -493,7 +534,11 @@ $("importFile").addEventListener("change", async e => {
       gpu: v[ix("gpu")] || "",
       ram: Number(v[ix("ram_gb")]) || 0,
       expand: ["yes", "no", "unknown"].includes(v[ix("ram_expandible")]) ? v[ix("ram_expandible")] : "unknown",
+      ram_type: v[ix("ram_tipo")] || "",
+      ram_mhz: Number(v[ix("ram_mhz")]) || 0,
       storage: Number(v[ix("almacenamiento_gb")]) || 0,
+      storage_expand: ["yes", "no", "unknown"].includes(v[ix("almacenamiento_expandible")]) ? v[ix("almacenamiento_expandible")] : "unknown",
+      storage_type: v[ix("almacenamiento_tipo")] || "",
       furmark: Number(v[ix("furmark2")]) || 0,
       gaming: Number(v[ix("gaming")]) || 0,
       design: Number(v[ix("diseno")]) || 0,
