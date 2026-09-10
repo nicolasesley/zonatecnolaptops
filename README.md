@@ -26,16 +26,15 @@ Editá `config.js` con tu URL y anon key. Después abrí `index.html` con un ser
 npx --yes serve .
 ```
 
-`config.js` no se commitea: en Cloudflare se sube o se genera en el deploy.
+`config.js` no se commitea: Cloudflare lo genera en el deploy.
 
 ## 3. Cloudflare
 
-Publicá `index.html` y `config.js` como Worker / assets estáticos. En `config.js`:
+Build command: `node scripts/write-config.js`
 
-```js
-window.SUPABASE_URL = "https://TU-PROYECTO.supabase.co";
-window.SUPABASE_ANON_KEY = "tu-anon-key";
-```
+En **Settings → Variables and Secrets** (o Environment variables) agregá:
+- `SUPABASE_URL` — Project URL, sin `/rest/v1/`
+- `SUPABASE_ANON_KEY` — anon public / publishable key
 
 ## Notas
 
