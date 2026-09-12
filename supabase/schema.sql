@@ -8,6 +8,7 @@ create table if not exists public.laptops (
   cpu text not null,
   family text not null,
   gpu text not null,
+  screen_type text not null default '',
   ram integer not null,
   expand text not null default 'unknown' check (expand in ('yes', 'no', 'unknown')),
   ram_type text not null default '' check (ram_type in ('ddr4', 'ddr5', '')),
@@ -71,3 +72,4 @@ alter table public.laptops add column if not exists ram_type text not null defau
 alter table public.laptops add column if not exists ram_mhz integer not null default 0;
 alter table public.laptops add column if not exists storage_expand text not null default 'unknown';
 alter table public.laptops add column if not exists storage_type text not null default '';
+alter table public.laptops add column if not exists screen_type text not null default '';

@@ -47,7 +47,7 @@ th.sortable:hover{color:var(--text)}
 tbody td{padding:12px 10px;border-bottom:1px solid #e8edf3;font-size:13px;white-space:nowrap}
 tbody tr:hover td{background:#fbfcfe}
 .code{font-size:11px;color:var(--muted)}.model{font-weight:750}.price{font-weight:800}
-.ram{font-weight:750}.ram-icon{font-size:17px;margin-left:5px}.yes{color:var(--green)}.no{color:var(--red)}.unknown{color:var(--yellow)}
+.ram{font-weight:750}.spec-extra{font-weight:600;color:var(--muted);margin-left:6px}.ram-icon{font-size:17px;margin-left:6px}.yes{color:var(--green)}.no{color:var(--red)}.unknown{color:var(--yellow)}
 .actions{display:flex;gap:5px}.actions .btn{padding:7px 9px;font-size:11px}
 .form{padding:0}
 .form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;padding:14px 20px}
@@ -99,7 +99,7 @@ tbody tr:hover td{background:#fbfcfe}
       <table>
         <thead>
           <tr>
-            <th>Código</th><th>Marca / Modelo</th><th>Procesador</th><th>Familia CPU</th>
+            <th>Código</th><th>Marca / Modelo</th><th>Tipo de pantalla</th><th>Procesador</th><th>Familia CPU</th>
             <th>GPU</th><th>RAM</th><th>Almacenamiento</th>
             <th class="sortable" onclick="toggleSort('furmark')">FurMark 2<span class="sort-ind" id="furmarkSortInd"></span></th>
             <th class="sortable" onclick="toggleSort('price')">Precio<span class="sort-ind" id="priceSortInd"></span></th>
@@ -156,7 +156,10 @@ tbody tr:hover td{background:#fbfcfe}
           <label>Gráficos *</label>
           <input id="gpu" required placeholder="Radeon 610M / RTX 4050">
         </div>
-        <div class="field skip"></div>
+        <div class="field">
+          <label>Tipo de pantalla</label>
+          <input id="screenType" placeholder='Ej. 14" OLED o 15,6" IPS 144Hz'>
+        </div>
 
         <div class="field">
           <label>RAM (GB) *</label>
@@ -265,6 +268,7 @@ function toRow(x) {
     cpu: x.cpu,
     family: x.family,
     gpu: x.gpu,
+    screen_type: x.screen_type || "",
     ram: Number(x.ram),
     expand: x.expand || "unknown",
     ram_type: x.ram_type === "ddr4" || x.ram_type === "ddr5" ? x.ram_type : "",
@@ -287,15 +291,18 @@ function expandIcon(v, what) {
   return `<span class="ram-icon unknown" title="Expandibilidad de ${what} desconocida">?</span>`;
 }
 
+function specCell(gb, extra, expand, what) {
+  const extraHtml = extra ? ` <span class="spec-extra">${esc(extra)}</span>` : "";
+  return `${esc(gb)} GB${extraHtml}${expandIcon(expand, what)}`;
+}
+
 function ramCell(x) {
-  const type = x.ram_type === "ddr4" ? " DDR4" : x.ram_type === "ddr5" ? " DDR5" : "";
-  const mhz = x.ram_mhz ? " " + esc(x.ram_mhz) + " MHz" : "";
-  return `${esc(x.ram)} GB${type}${mhz} ${expandIcon(x.expand, "RAM")}`;
+  const type = x.ram_type === "ddr4" ? "DDR4" : x.ram_type === "ddr5" ? "DDR5" : "";
+  return specCell(x.ram, type, x.expand, "RAM");
 }
 
 function storageCell(x) {
-  const kind = x.storage_type ? " " + esc(x.storage_type) : "";
-  return `${esc(x.storage)} GB${kind} ${expandIcon(x.storage_expand, "almacenamiento")}`;
+  return specCell(x.storage, x.storage_type, x.storage_expand, "almacenamiento");
 }
 
 function setRadio(name, value) {
@@ -330,7 +337,7 @@ function refresh() {
   const ram = $("filterRam").value, storage = $("filterStorage").value;
 
   let rows = data.filter(x => {
-    const text = [x.code, x.brand, x.model, x.cpu, x.family, x.gpu, x.ram_type, x.storage_type].join(" ").toLowerCase();
+    const text = [x.code, x.brand, x.model, x.cpu, x.family, x.gpu, x.screen_type, x.ram_type, x.storage_type].join(" ").toLowerCase();
     const gpuOk = !gpu || normalizeGPU(x.gpu) === gpu;
     const ramOk = !ram || (ram === "64" ? x.ram >= 64 : Number(x.ram) === Number(ram));
     const storageOk = !storage || Number(x.storage) === Number(storage);
@@ -348,6 +355,7 @@ function refresh() {
     return `<tr data-id="${esc(x.id)}">
       <td><div class="code">${esc(x.code)}</div></td>
       <td><div class="model">${esc(x.brand)}</div>${esc(x.model)}</td>
+      <td>${x.screen_type ? esc(x.screen_type) : "—"}</td>
       <td>${esc(x.cpu)}</td><td>${esc(x.family)}</td><td>${esc(x.gpu)}</td>
       <td class="ram">${ramCell(x)}</td>
       <td>${storageCell(x)}</td><td>${x.furmark ? esc(x.furmark) : "—"}</td>
@@ -357,7 +365,7 @@ function refresh() {
         ${canManage ? '<button class="btn" data-action="edit">✏ Editar</button><button class="btn danger" data-action="remove">Eliminar</button>' : ""}
       </div></td>
     </tr>`;
-  }).join("") : '<tr><td colspan="10" class="empty">No se encontraron laptops con esos filtros.</td></tr>';
+  }).join("") : '<tr><td colspan="11" class="empty">No se encontraron laptops con esos filtros.</td></tr>';
 
   updateFilterOptions();
 }
@@ -467,6 +475,7 @@ function editLaptop(id) {
   $("editId").value = x.id; $("code").value = x.code; $("brand").value = x.brand; $("model").value = x.model;
   $("link").value = x.link || "";
   $("family").value = x.family; $("cpu").value = x.cpu; $("gpu").value = x.gpu;
+  $("screenType").value = x.screen_type || "";
   $("ram").value = x.ram; $("ramType").value = x.ram_type || ""; $("ramMhz").value = x.ram_mhz || "";
   setRadio("expand", x.expand);
   $("storage").value = x.storage; $("storageType").value = x.storage_type || "";
@@ -497,6 +506,7 @@ function readForm() {
     cpu: $("cpu").value.trim(),
     family: $("family").value.trim(),
     gpu: $("gpu").value.trim(),
+    screen_type: $("screenType").value.trim(),
     ram: Number($("ram").value),
     expand: document.querySelector('input[name="expand"]:checked').value,
     ram_type: $("ramType").value,
@@ -553,9 +563,9 @@ $("form").addEventListener("submit", async e => {
 
 function csvEscape(v) { return '"' + String(v ?? "").replace(/"/g, '""') + '"'; }
 function exportCSV() {
-  const headers = ["codigo", "marca", "modelo", "link", "familia_cpu", "procesador", "gpu", "ram_gb", "ram_tipo", "ram_mhz", "ram_expandible", "almacenamiento_gb", "almacenamiento_expandible", "almacenamiento_tipo", "furmark2", "precio_usd"];
+  const headers = ["codigo", "marca", "modelo", "link", "familia_cpu", "procesador", "gpu", "tipo_pantalla", "ram_gb", "ram_tipo", "ram_mhz", "ram_expandible", "almacenamiento_gb", "almacenamiento_expandible", "almacenamiento_tipo", "furmark2", "precio_usd"];
   const lines = [headers.join(","), ...data.map(x => [
-    x.code, x.brand, x.model, x.link, x.family, x.cpu, x.gpu, x.ram, x.ram_type, x.ram_mhz, x.expand, x.storage, x.storage_expand, x.storage_type, x.furmark, x.price
+    x.code, x.brand, x.model, x.link, x.family, x.cpu, x.gpu, x.screen_type, x.ram, x.ram_type, x.ram_mhz, x.expand, x.storage, x.storage_expand, x.storage_type, x.furmark, x.price
   ].map(csvEscape).join(","))];
   const blob = new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "catalogo_laptops.csv"; a.click();
@@ -590,6 +600,7 @@ $("importFile").addEventListener("change", async e => {
       cpu: v[ix("procesador")] || "",
       family: v[ix("familia_cpu")] || "",
       gpu: v[ix("gpu")] || "",
+      screen_type: v[ix("tipo_pantalla")] || "",
       ram: Number(v[ix("ram_gb")]) || 0,
       expand: ["yes", "no", "unknown"].includes(v[ix("ram_expandible")]) ? v[ix("ram_expandible")] : "unknown",
       ram_type: v[ix("ram_tipo")] || "",
