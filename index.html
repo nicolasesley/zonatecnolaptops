@@ -89,7 +89,7 @@ tbody tr.selected:hover td{background:#c9dcf8}
   </section>
   <section class="panel">
     <div class="filters">
-      <input id="search" placeholder="🔎 Buscar código, marca, modelo, CPU o GPU...">
+      <input id="search" placeholder="🔎 Buscar código, marca, modelo, CPU, GPU, RAM, GB...">
       <select id="filterBrand"><option value="">Todas las marcas</option></select>
       <select id="filterGpu"><option value="">Todas las GPU</option></select>
       <select id="filterFamily"><option value="">Todas las familias</option></select>
@@ -339,13 +339,30 @@ function toggleSort(col) {
   refresh();
 }
 
+function searchText(x) {
+  const ramGb = Number(x.ram) || 0;
+  const storageGb = Number(x.storage) || 0;
+  const ramType = x.ram_type === "ddr4" ? "ddr4" : x.ram_type === "ddr5" ? "ddr5" : "";
+  const parts = [
+    x.code, x.brand, x.model, x.cpu, x.family, x.gpu, x.screen_type, ramType, x.storage_type,
+    ramGb, `${ramGb}gb`, `${ramGb} gb`, `${ramGb}gb ram`, `ram ${ramGb}`,
+    storageGb, `${storageGb}gb`, `${storageGb} gb`, `${storageGb}gb almacenamiento`, `almacenamiento ${storageGb}`,
+    x.ram_mhz
+  ];
+  if (storageGb >= 1024 && storageGb % 1024 === 0) {
+    const tb = storageGb / 1024;
+    parts.push(tb, `${tb}tb`, `${tb} tb`);
+  }
+  return parts.join(" ").toLowerCase();
+}
+
 function refresh() {
   const q = $("search").value.toLowerCase().trim();
   const brand = $("filterBrand").value, fam = $("filterFamily").value, gpu = $("filterGpu").value;
   const ram = $("filterRam").value, storage = $("filterStorage").value;
 
   const matches = x => {
-    const text = [x.code, x.brand, x.model, x.cpu, x.family, x.gpu, x.screen_type, x.ram_type, x.storage_type].join(" ").toLowerCase();
+    const text = searchText(x);
     const gpuOk = !gpu || normalizeGPU(x.gpu) === gpu;
     const ramOk = !ram || (ram === "64" ? x.ram >= 64 : Number(x.ram) === Number(ram));
     const storageOk = !storage || Number(x.storage) === Number(storage);
