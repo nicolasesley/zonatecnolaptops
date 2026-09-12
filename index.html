@@ -32,7 +32,7 @@ button{cursor:pointer}
 .modal-actions{display:flex;gap:8px;margin-top:14px}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
 .top-bar .panel,.bottom-bar .panel{margin:0}
-.filters{padding:14px;display:grid;grid-template-columns:2fr repeat(5,1fr) auto auto;gap:9px;align-items:center}
+.filters{padding:14px;display:grid;grid-template-columns:2fr repeat(5,1fr) auto auto auto;gap:9px;align-items:center}
 input,select{height:41px;border:1px solid #cbd4df;border-radius:8px;background:#fff;padding:0 11px;color:var(--text);outline:none}
 input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 2px #1769e01c}
 .btn{border:1px solid #ccd5e0;background:#fff;border-radius:8px;padding:9px 14px;font-weight:600}
@@ -45,7 +45,10 @@ th.sortable{cursor:pointer;user-select:none}
 th.sortable:hover{color:var(--text)}
 .sort-ind{margin-left:4px;color:var(--primary)}
 tbody td{padding:12px 10px;border-bottom:1px solid #e8edf3;font-size:13px;white-space:nowrap}
-tbody tr:hover td{background:#fbfcfe}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:#eef2f7}
+tbody tr.selected td{background:#d7e6fb}
+tbody tr.selected:hover td{background:#c9dcf8}
 .code{font-size:11px;color:var(--muted)}.model{font-weight:750}.price{font-weight:800}
 .ram{font-weight:750}.spec-extra{font-weight:600;color:var(--muted);margin-left:6px}.ram-icon{font-size:17px;margin-left:6px}.yes{color:var(--green)}.no{color:var(--red)}.unknown{color:var(--yellow)}
 .actions{display:flex;gap:5px}.actions .btn{padding:7px 9px;font-size:11px}
@@ -93,6 +96,7 @@ tbody tr:hover td{background:#fbfcfe}
       <select id="filterRam"><option value="">Toda la RAM</option><option value="4">4 GB</option><option value="8">8 GB</option><option value="12">12 GB</option><option value="16">16 GB</option><option value="24">24 GB</option><option value="32">32 GB</option><option value="64">64 GB o más</option></select>
       <select id="filterStorage"><option value="">Todo el almacenamiento</option><option value="128">128 GB</option><option value="256">256 GB</option><option value="512">512 GB</option><option value="1024">1024 GB</option><option value="2048">2048 GB</option></select>
       <button class="btn primary" onclick="clearFilters()">Limpiar</button>
+      <button class="btn" id="clearSelection" type="button" onclick="clearSelection()" hidden>Quitar selección</button>
       <button type="button" id="statusBadge" class="badge warn" onclick="openUnlockModal()">Zonatecno · Sin conexión</button>
     </div>
   </section>
@@ -258,6 +262,7 @@ let sortCol = null;
 let canManage = sessionStorage.getItem("zonatecnoManage") === "1";
 const MANAGE_PASSWORD = "nesley2026";
 let sortDir = null;
+let selectedIds = [];
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -339,23 +344,38 @@ function refresh() {
   const brand = $("filterBrand").value, fam = $("filterFamily").value, gpu = $("filterGpu").value;
   const ram = $("filterRam").value, storage = $("filterStorage").value;
 
-  let rows = data.filter(x => {
+  const matches = x => {
     const text = [x.code, x.brand, x.model, x.cpu, x.family, x.gpu, x.screen_type, x.ram_type, x.storage_type].join(" ").toLowerCase();
     const gpuOk = !gpu || normalizeGPU(x.gpu) === gpu;
     const ramOk = !ram || (ram === "64" ? x.ram >= 64 : Number(x.ram) === Number(ram));
     const storageOk = !storage || Number(x.storage) === Number(storage);
     return (!q || text.includes(q)) && (!brand || x.brand === brand) && (!fam || x.family === fam) && gpuOk && ramOk && storageOk;
-  });
+  };
+
+  let filtered = data.filter(matches);
   if (sortCol) {
-    rows = rows.slice().sort((a, b) => {
+    filtered = filtered.slice().sort((a, b) => {
       const av = Number(a[sortCol]) || 0;
       const bv = Number(b[sortCol]) || 0;
       return sortDir === "desc" ? bv - av : av - bv;
     });
   }
 
+  selectedIds = selectedIds.filter(id => data.some(x => x.id === id));
+  const selectedSet = new Set(selectedIds);
+  const pinned = selectedIds.map(id => data.find(x => x.id === id)).filter(Boolean);
+  const rest = filtered.filter(x => !selectedSet.has(x.id));
+  const rows = [...pinned, ...rest];
+
+  const clearBtn = $("clearSelection");
+  if (clearBtn) {
+    clearBtn.hidden = !pinned.length;
+    clearBtn.textContent = pinned.length ? `Quitar selección (${pinned.length})` : "Quitar selección";
+  }
+
   $("rows").innerHTML = rows.length ? rows.map(x => {
-    return `<tr data-id="${esc(x.id)}">
+    const on = selectedSet.has(x.id);
+    return `<tr data-id="${esc(x.id)}" class="${on ? "selected" : ""}">
       <td><div class="code">${esc(x.code)}</div></td>
       <td><div class="model">${esc(x.brand)}</div>${esc(x.model)}</td>
       <td>${x.screen_type ? esc(x.screen_type) : "—"}</td>
@@ -412,6 +432,18 @@ function clearFilters() {
   refresh();
 }
 
+function clearSelection() {
+  selectedIds = [];
+  refresh();
+}
+
+function toggleSelect(id) {
+  const i = selectedIds.indexOf(id);
+  if (i >= 0) selectedIds.splice(i, 1);
+  else selectedIds.push(id);
+  refresh();
+}
+
 function toggleForm() {
   const content = $("formContent");
   const button = $("toggleFormBtn");
@@ -420,15 +452,20 @@ function toggleForm() {
 }
 
 $("rows").addEventListener("click", e => {
+  const tr = e.target.closest("tr");
+  const id = tr?.dataset.id;
+  if (!id) return;
   const btn = e.target.closest("[data-action]");
-  if (!btn) return;
-  const id = btn.closest("tr")?.dataset.id;
-  const x = data.find(v => v.id === id);
-  if (!x) return;
-  if (btn.dataset.action === "open") openLink(x.link);
-  if (!canManage) return;
-  if (btn.dataset.action === "edit") editLaptop(id);
-  if (btn.dataset.action === "remove") removeLaptop(id);
+  if (btn) {
+    const x = data.find(v => v.id === id);
+    if (!x) return;
+    if (btn.dataset.action === "open") openLink(x.link);
+    if (!canManage) return;
+    if (btn.dataset.action === "edit") editLaptop(id);
+    if (btn.dataset.action === "remove") removeLaptop(id);
+    return;
+  }
+  toggleSelect(id);
 });
 
 function openUnlockModal() {
