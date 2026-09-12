@@ -17,7 +17,7 @@ button,input,select{font:inherit}
 button{cursor:pointer}
 .top-bar,.bottom-bar{flex:0 0 auto;z-index:30;background:var(--bg)}
 .top-bar{padding:12px 24px 10px}
-.bottom-bar{padding:10px 24px 12px;max-height:58vh;overflow:auto}
+.bottom-bar{padding:8px 24px 8px;max-height:48vh;overflow:auto}
 .table-area{flex:1 1 auto;min-height:0;overflow:auto;padding:0 24px 8px}
 .table-area .panel{margin:0;height:100%;display:flex;flex-direction:column}
 .badge{background:#e9f1ff;color:var(--primary);padding:8px 12px;border-radius:9px;font-weight:700;font-size:13px;white-space:nowrap;border:0;appearance:none;cursor:pointer}
@@ -50,20 +50,24 @@ tbody tr:hover td{background:#fbfcfe}
 .ram{font-weight:750}.spec-extra{font-weight:600;color:var(--muted);margin-left:6px}.ram-icon{font-size:17px;margin-left:6px}.yes{color:var(--green)}.no{color:var(--red)}.unknown{color:var(--yellow)}
 .actions{display:flex;gap:5px}.actions .btn{padding:7px 9px;font-size:11px}
 .form{padding:0}
-.form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;padding:14px 20px}
-.form-head h2{font-size:18px;margin:0}.editing{font-size:12px;color:var(--primary);font-weight:650}
-.form-head-right{display:flex;align-items:center;gap:10px}.toggle-btn{white-space:nowrap}
-.form-content{padding:0 20px 20px}.form-content.collapsed{display:none}
-.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 12px;align-items:start}
+.form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;padding:8px 14px}
+.form-head h2{font-size:15px;margin:0}.editing{font-size:11px;color:var(--primary);font-weight:650}
+.form-head-right{display:flex;align-items:center;gap:8px}.toggle-btn{white-space:nowrap;padding:6px 10px;font-size:12px}
+.form-content{padding:0 14px 10px}.form-content.collapsed{display:none}
+.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px 8px;align-items:start}
 .field{display:flex;flex-direction:column;min-width:0}
-.field label{display:flex;align-items:flex-end;min-height:32px;font-size:11px;color:var(--muted);font-weight:650;margin-bottom:5px;line-height:1.2}
-.field > input,.field > select,.field > .expand{width:100%;height:41px;flex:0 0 41px}
-.expand{border:1px solid #cbd4df;border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 10px}
-.expand label{margin:0;min-height:0;color:var(--text);font-weight:500;font-size:12px;display:flex;align-items:center;gap:4px;white-space:nowrap}
-.actions-form{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.field label{display:flex;align-items:flex-end;min-height:0;font-size:10px;color:var(--muted);font-weight:650;margin-bottom:2px;line-height:1.2}
+.form input:not([type="radio"]):not([type="file"]):not([type="hidden"]),.form select{height:32px;border-radius:6px;padding:0 8px;font-size:13px}
+.field > input,.field > select,.field > .expand{width:100%;height:32px;flex:0 0 32px}
+.expand{border:1px solid #cbd4df;border-radius:6px;display:flex;align-items:center;justify-content:space-between;gap:4px;padding:0 8px}
+.expand label{margin:0;min-height:0;color:var(--text);font-weight:500;font-size:11px;display:flex;align-items:center;gap:3px;white-space:nowrap}
+.field-split{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.field-split .field{min-width:0}
+.actions-form{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.form .actions-form .btn{padding:6px 10px;font-size:12px;border-radius:6px}
 .import-label{display:inline-flex;align-items:center}
 .empty{text-align:center;color:var(--muted);padding:45px}
-.help{margin-top:10px;color:var(--muted);font-size:11px}
+.help{margin-top:4px;color:var(--muted);font-size:10px}
 .setup{padding:16px 20px;display:none;margin-bottom:10px}
 .setup.show{display:block}
 .setup h2{margin:0 0 8px;font-size:16px}
@@ -194,7 +198,6 @@ tbody tr:hover td{background:#fbfcfe}
           <label>Tipo de almacenamiento</label>
           <input id="storageType" placeholder="Ej. M.2, NVMe, SATA">
         </div>
-        <div class="field skip"></div>
         <div class="field">
           <label>Almacenamiento expandible</label>
           <div class="expand">
@@ -203,17 +206,16 @@ tbody tr:hover td{background:#fbfcfe}
             <label><input type="radio" name="storageExpand" value="unknown" checked> ? No sé</label>
           </div>
         </div>
-
-        <div class="field">
-          <label>FurMark 2</label>
-          <input id="furmark" type="number" min="0" step="0.1" placeholder="Ej. 1250">
+        <div class="field-split">
+          <div class="field">
+            <label>FurMark 2</label>
+            <input id="furmark" type="number" min="0" step="0.1" placeholder="Ej. 1250">
+          </div>
+          <div class="field">
+            <label>Precio USD</label>
+            <input id="price" type="number" min="0" step="1" placeholder="659">
+          </div>
         </div>
-        <div class="field">
-          <label>Precio USD</label>
-          <input id="price" type="number" min="0" step="1" placeholder="659">
-        </div>
-        <div class="field skip"></div>
-        <div class="field skip"></div>
       </div>
 
       <div class="actions-form">
