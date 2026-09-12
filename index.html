@@ -50,9 +50,10 @@ tbody tr:hover td{background:#fbfcfe}
 .ram{font-weight:750}.spec-extra{font-weight:600;color:var(--muted);margin-left:6px}.ram-icon{font-size:17px;margin-left:6px}.yes{color:var(--green)}.no{color:var(--red)}.unknown{color:var(--yellow)}
 .actions{display:flex;gap:5px}.actions .btn{padding:7px 9px;font-size:11px}
 .form{padding:0}
-.form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;padding:8px 14px}
+.form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;padding:8px 14px;gap:10px}
+.form-head-left{display:flex;align-items:center;gap:10px;min-width:0}
 .form-head h2{font-size:15px;margin:0}.editing{font-size:11px;color:var(--primary);font-weight:650}
-.form-head-right{display:flex;align-items:center;gap:8px}.toggle-btn{white-space:nowrap;padding:6px 10px;font-size:12px}
+.toggle-btn{white-space:nowrap;padding:6px 10px;font-size:12px}
 .form-content{padding:0 14px 10px}.form-content.collapsed{display:none}
 .form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px 8px;align-items:start}
 .field{display:flex;flex-direction:column;min-width:0}
@@ -119,11 +120,11 @@ tbody tr:hover td{background:#fbfcfe}
 <footer class="bottom-bar">
   <section class="panel form" id="formPanel">
     <div class="form-head">
-      <h2 id="formTitle">＋ Agregar laptop al catálogo</h2>
-      <div class="form-head-right">
-        <div id="editing" class="editing"></div>
+      <div class="form-head-left">
         <button class="btn toggle-btn" id="toggleFormBtn" type="button" onclick="toggleForm()">＋ Mostrar</button>
+        <h2 id="formTitle">＋ Agregar laptop al catálogo</h2>
       </div>
+      <div id="editing" class="editing"></div>
     </div>
 
     <div id="formContent" class="form-content collapsed">
