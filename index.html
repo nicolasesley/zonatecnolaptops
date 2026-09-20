@@ -84,6 +84,7 @@ tbody tr.furmark-cmp td{padding:2px 10px;border-bottom:0;background:#d7e6fb;line
 .filters-top,.filters-meta,.filter-controls{display:contents}
 .filters-toggle{display:none}
 .filter-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;margin-left:6px;padding:0 5px;border-radius:9px;background:var(--primary);color:#fff;font-size:11px;font-weight:700;line-height:1}
+.filter-count[hidden]{display:none !important}
 .btn.primary .filter-count{background:#fff;color:var(--primary)}
 @media(max-width:1100px){.filters{grid-template-columns:repeat(3,1fr)}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.field.skip{display:none}}
 @media(max-width:650px){
@@ -112,7 +113,7 @@ tbody tr.furmark-cmp td{padding:2px 10px;border-bottom:0;background:#d7e6fb;line
       <div class="filters-top">
         <input id="search" placeholder="🔎 Buscar código, marca, modelo, CPU, GPU, RAM...">
         <button class="btn filters-toggle" id="toggleFiltersBtn" type="button" onclick="toggleFiltersPanel()" aria-expanded="false" aria-controls="filterControls">
-          Filtros<span class="filter-count" id="filterCount" hidden>0</span>
+          <span id="filtersToggleLabel">Filtros</span><span class="filter-count" id="filterCount" hidden>0</span>
         </button>
       </div>
       <div class="filter-controls" id="filterControls">
@@ -489,6 +490,8 @@ function toggleFiltersPanel() {
   const btn = $("toggleFiltersBtn");
   const open = panel.classList.toggle("open");
   btn.setAttribute("aria-expanded", open ? "true" : "false");
+  const label = $("filtersToggleLabel");
+  if (label) label.textContent = open ? "Ocultar filtros" : "Filtros";
   updateActiveFilterCount();
 }
 
