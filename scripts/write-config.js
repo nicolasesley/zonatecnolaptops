@@ -37,10 +37,15 @@ if (!url.startsWith("https://") || url.includes("TU-PROYECTO") || key.length < 2
   process.exit(1);
 }
 
-const dest = path.join(__dirname, "..", "config.js");
+const root = path.join(__dirname, "..");
+const dist = path.join(root, "dist");
 const contents =
   "window.SUPABASE_URL = " + JSON.stringify(url) + ";\n" +
   "window.SUPABASE_ANON_KEY = " + JSON.stringify(key) + ";\n";
 
-fs.writeFileSync(dest, contents);
+fs.mkdirSync(dist, { recursive: true });
+fs.copyFileSync(path.join(root, "index.html"), path.join(dist, "index.html"));
+fs.writeFileSync(path.join(dist, "config.js"), contents);
+fs.writeFileSync(path.join(root, "config.js"), contents);
 console.log("config.js escrito con SUPABASE_URL");
+console.log("dist/ listo para deploy (index.html + config.js)");

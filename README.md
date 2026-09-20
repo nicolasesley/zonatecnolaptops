@@ -30,7 +30,10 @@ npx --yes serve .
 
 ## 3. Cloudflare
 
-Build command: `node scripts/write-config.js`
+Build command: `node scripts/write-config.js`  
+Deploy command: `npx wrangler versions upload`
+
+El build genera `dist/index.html` + `dist/config.js`. Wrangler (`wrangler.jsonc`) publica esa carpeta como static assets del Worker `zonatecnolaptops`.
 
 En **Settings → Variables and Secrets** (o Environment variables) agregá:
 - `SUPABASE_URL` — Project URL, sin `/rest/v1/`
