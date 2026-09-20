@@ -345,7 +345,9 @@ function specCell(gb, extra, expand, what) {
 
 function ramCell(x) {
   const type = x.ram_type === "ddr4" ? "DDR4" : x.ram_type === "ddr5" ? "DDR5" : "";
-  return specCell(x.ram, type, x.expand, "RAM");
+  const mhz = Number(x.ram_mhz) || 0;
+  const parts = [type, mhz ? `${mhz} MHz` : ""].filter(Boolean);
+  return specCell(x.ram, parts.join(" "), x.expand, "RAM");
 }
 
 function storageCell(x) {
