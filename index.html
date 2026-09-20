@@ -80,8 +80,24 @@ tbody tr.furmark-cmp td{padding:2px 10px;border-bottom:0;background:#d7e6fb;line
 .setup h2{margin:0 0 8px;font-size:16px}
 .setup code{background:#f4f6f9;padding:2px 6px;border-radius:4px;font-size:12px}
 .toast{position:fixed;right:20px;top:20px;background:#182235;color:#fff;padding:12px 16px;border-radius:9px;box-shadow:var(--shadow);display:none;font-size:13px;z-index:40}
+.furmark-none{color:var(--muted);font-weight:550;font-size:12px}
+.filters-top,.filters-meta,.filter-controls{display:contents}
+.filters-toggle{display:none}
+.filter-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;margin-left:6px;padding:0 5px;border-radius:9px;background:var(--primary);color:#fff;font-size:11px;font-weight:700;line-height:1}
 @media(max-width:1100px){.filters{grid-template-columns:repeat(3,1fr)}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.field.skip{display:none}}
-@media(max-width:650px){.top-bar,.bottom-bar,.table-area{padding-left:12px;padding-right:12px}.filters,.form-grid{grid-template-columns:1fr}.badge{justify-self:start}}
+@media(max-width:650px){
+  .top-bar,.bottom-bar,.table-area{padding-left:12px;padding-right:12px}
+  .form-grid{grid-template-columns:1fr}
+  .filters{display:flex;flex-direction:column;gap:8px;padding:12px}
+  .filters-top{display:flex;gap:8px;align-items:center}
+  .filters-top #search{flex:1 1 auto;min-width:0}
+  .filters-toggle{display:inline-flex;align-items:center;flex:0 0 auto;white-space:nowrap;padding:9px 12px}
+  .filter-controls{display:none;width:100%;grid-template-columns:1fr;gap:8px}
+  .filter-controls.open{display:grid}
+  .filters-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .filters-meta .btn,.filters-meta .badge{flex:1 1 auto}
+  .badge{justify-self:start}
+}
 </style>
 </head>
 <body>
@@ -92,15 +108,24 @@ tbody tr.furmark-cmp td{padding:2px 10px;border-bottom:0;background:#d7e6fb;line
   </section>
   <section class="panel">
     <div class="filters">
-      <input id="search" placeholder="🔎 Buscar código, marca, modelo, CPU, GPU, RAM, GB...">
-      <select id="filterBrand"><option value="">Todas las marcas</option></select>
-      <select id="filterGpu"><option value="">Todas las GPU</option></select>
-      <select id="filterFamily"><option value="">Todas las familias</option></select>
-      <select id="filterRam"><option value="">Toda la RAM</option><option value="4">4 GB</option><option value="8">8 GB</option><option value="12">12 GB</option><option value="16">16 GB</option><option value="24">24 GB</option><option value="32">32 GB</option><option value="64">64 GB o más</option></select>
-      <select id="filterStorage"><option value="">Todo el almacenamiento</option><option value="128">128 GB</option><option value="256">256 GB</option><option value="512">512 GB</option><option value="1024">1024 GB</option><option value="2048">2048 GB</option></select>
-      <button class="btn primary" onclick="clearFilters()">Limpiar</button>
-      <button class="btn" id="clearSelection" type="button" onclick="clearSelection()" hidden>Quitar selección</button>
-      <button type="button" id="statusBadge" class="badge warn" onclick="openUnlockModal()">Zonatecno · Sin conexión</button>
+      <div class="filters-top">
+        <input id="search" placeholder="🔎 Buscar código, marca, modelo, CPU, GPU, RAM...">
+        <button class="btn filters-toggle" id="toggleFiltersBtn" type="button" onclick="toggleFiltersPanel()" aria-expanded="false" aria-controls="filterControls">
+          Filtros<span class="filter-count" id="filterCount" hidden>0</span>
+        </button>
+      </div>
+      <div class="filter-controls" id="filterControls">
+        <select id="filterBrand"><option value="">Todas las marcas</option></select>
+        <select id="filterGpu"><option value="">Todas las GPU</option></select>
+        <select id="filterFamily"><option value="">Todas las familias</option></select>
+        <select id="filterRam"><option value="">Toda la RAM</option><option value="4">4 GB</option><option value="8">8 GB</option><option value="12">12 GB</option><option value="16">16 GB</option><option value="24">24 GB</option><option value="32">32 GB</option><option value="64">64 GB o más</option></select>
+        <select id="filterStorage"><option value="">Todo el almacenamiento</option><option value="128">128 GB</option><option value="256">256 GB</option><option value="512">512 GB</option><option value="1024">1024 GB</option><option value="2048">2048 GB</option></select>
+        <button class="btn primary" type="button" onclick="clearFilters()">Limpiar</button>
+      </div>
+      <div class="filters-meta">
+        <button class="btn" id="clearSelection" type="button" onclick="clearSelection()" hidden>Quitar selección</button>
+        <button type="button" id="statusBadge" class="badge warn" onclick="openUnlockModal()">Zonatecno · Sin conexión</button>
+      </div>
     </div>
   </section>
 </header>
@@ -302,6 +327,15 @@ function expandIcon(v, what) {
   return `<span class="ram-icon unknown" title="Expandibilidad de ${what} desconocida">?</span>`;
 }
 
+function hasFurmark(x) {
+  return (Number(x?.furmark) || 0) > 0;
+}
+
+function furmarkCell(x) {
+  if (!hasFurmark(x)) return '<span class="furmark-none" title="FurMark 2 no se midió en esta laptop">Test no realizado</span>';
+  return esc(Number(x.furmark));
+}
+
 function specCell(gb, extra, expand, what) {
   const extraHtml = extra ? ` <span class="spec-extra">${esc(extra)}</span>` : "";
   return `${esc(gb)} GB${extraHtml}${expandIcon(expand, what)}`;
@@ -375,6 +409,11 @@ function refresh() {
   let filtered = data.filter(matches);
   if (sortCol) {
     filtered = filtered.slice().sort((a, b) => {
+      if (sortCol === "furmark") {
+        const aOk = hasFurmark(a);
+        const bOk = hasFurmark(b);
+        if (aOk !== bOk) return aOk ? -1 : 1;
+      }
       const av = Number(a[sortCol]) || 0;
       const bv = Number(b[sortCol]) || 0;
       return sortDir === "desc" ? bv - av : av - bv;
@@ -396,6 +435,8 @@ function refresh() {
     clearBtn.textContent = pinned.length ? `Quitar selección (${pinned.length})` : "Quitar selección";
   }
 
+  updateActiveFilterCount();
+
   const cmpHtml = pinned.length === 2 ? furmarkCompareRow(pinned[0], pinned[1]) : "";
   $("rows").innerHTML = rows.length ? rows.map((x, i) => {
     const on = selectedSet.has(x.id);
@@ -405,7 +446,7 @@ function refresh() {
       <td>${x.screen_type ? esc(x.screen_type) : "—"}</td>
       <td>${esc(x.cpu)}</td><td>${esc(x.family)}</td><td>${esc(x.gpu)}</td>
       <td class="ram">${ramCell(x)}</td>
-      <td>${storageCell(x)}</td><td>${x.furmark ? esc(x.furmark) : "—"}</td>
+      <td>${storageCell(x)}</td><td>${furmarkCell(x)}</td>
       <td class="price">${x.price ? "USD " + esc(x.price) : "—"}</td>
       <td><div class="actions">
         ${x.link ? '<button class="btn" data-action="open">Ver</button>' : ""}
@@ -418,12 +459,36 @@ function refresh() {
 }
 
 function furmarkCompareRow(high, low) {
-  const hi = Number(high.furmark) || 0;
-  const lo = Number(low.furmark) || 0;
-  if (!hi || !lo) return "";
+  if (!hasFurmark(high) || !hasFurmark(low)) return "";
+  const hi = Number(high.furmark);
+  const lo = Number(low.furmark);
   const pct = Math.round((hi / lo - 1) * 100);
   const label = pct === 0 ? "igual" : `+${pct}%`;
   return `<tr class="furmark-cmp"><td colspan="8"></td><td><span class="furmark-pct">${label}</span></td><td colspan="2"></td></tr>`;
+}
+
+function activeFilterCount() {
+  return ["filterBrand", "filterGpu", "filterFamily", "filterRam", "filterStorage"]
+    .filter(id => $(id).value).length;
+}
+
+function updateActiveFilterCount() {
+  const count = activeFilterCount();
+  const badge = $("filterCount");
+  const btn = $("toggleFiltersBtn");
+  if (!badge || !btn) return;
+  badge.hidden = !count;
+  badge.textContent = String(count);
+  const open = $("filterControls").classList.contains("open");
+  btn.classList.toggle("primary", count > 0 && !open);
+}
+
+function toggleFiltersPanel() {
+  const panel = $("filterControls");
+  const btn = $("toggleFiltersBtn");
+  const open = panel.classList.toggle("open");
+  btn.setAttribute("aria-expanded", open ? "true" : "false");
+  updateActiveFilterCount();
 }
 
 function normalizeGPU(value) {
